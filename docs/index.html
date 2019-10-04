@@ -1,44 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style> 
-        .square {
-        height: 500px;
-        width: 750px;
-        margin-left: auto;
-        margin-right: auto;
-        background-color: #555;
-      }
-      
-        .centro{
-           text-align: center; 
-        }
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <link rel="stylesheet" href="game.css">
+    <script src="phaser.min.js"></script>
 
-
-    </style>
-
-
-      
-    <title>Document</title>
+    <title>¡Juego con Phaser!</title>
 </head>
 
-
 <body>
-    <div class="centro"> <h1>Tanks Showdown </h1></div>
-    
-     <div class="square"> </div>
+    <h1>Juego con Phaser</h1>
+    <script type="module">
+        import Game from './game.js';
 
-     <div class="centro"> 
-         
-        <h2>GDD</h2> 
-
-
-
-
-     </div>
-    
+        var config = {
+            type: Phaser.AUTO,
+            width: 1400,
+            height: 800,
+            pixelArt: true,
+            input: {
+                gamepad: true
+            },
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            },
+            scene: [ Game ],
+            physics: { default: 'arcade', arcade: { gravity: { y: 400 }, debug: false } }
+        };
+        new Phaser.Game(config);
+    </script>
 </body>
+
 </html>
