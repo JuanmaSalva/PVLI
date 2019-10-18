@@ -1,4 +1,6 @@
-export default class Game extends Phaser.Scene {
+import Player from './player.js'
+
+export default class Game extends Phaser.Scene { //es una escena
   constructor() {
     super({ key: 'main' });
   }
@@ -6,7 +8,9 @@ export default class Game extends Phaser.Scene {
     this.load.image('ey', 'favicon.png');
     this.load.image('fondo', 'fondo.png');
     this.load.image('ground', 'platform.png');
+    
   } //cargar los recursos
+
 
   create() {
     this.add.image(0, 0, 'fondo').setOrigin(0, 0).setScale(1.4);
@@ -21,38 +25,9 @@ export default class Game extends Phaser.Scene {
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground'); //crea las plataformas hijas del grupo
 
+    this.player = new Player(this); //crea un player
 
-    let player = this.physics.add.sprite(100, 450, 'ey');  //crea al personaje usando físicas
+    this.physics.add.collider(platforms, this.player);
 
-    player.setBounce(0.2); //le da un reboto el personaje
-    player.setCollideWorldBounds(true); //impide que el personaje salga de la pantalla
-
-    player.body.setGravityY(300); //le da gravedad al personaje
-
-    this.physics.add.collider(player, platforms); //añade colisiones entre el grupo de plataformas y el personaje
-
-
-    this.cursorKeys = this.input.keyboard.createCursorKeys();
-  }//inicializa todo
-
-  update() {
-
-    if (this.cursorKeys.left.isDown)
-    {
-        this.player.setVelocityX(-160);
-    }
-    else if (this.cursorKeys.right.isDown)
-    {
-        player.setVelocityX(160);
-    }/*
-    else
-    {
-        player.setVelocityX(0);
-    }
-    
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-330);
-    }*/
-  }
+  }//inicializa tod0
 }
