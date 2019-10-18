@@ -30,4 +30,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.physics.add.collider(platforms, this.player);
 
   }//inicializa tod0
+
+  update(){
+  }
 }
