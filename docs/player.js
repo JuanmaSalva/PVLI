@@ -8,6 +8,7 @@ export default class Player extends Phaser.GameObjects.Sprite { //es un gameobje
     this.speed = 100;
 
     this.cursors = this.scene.input.keyboard.createCursorKeys(); //el cursor de los huevos   
+    this.pointer = this.scene.input.activePointer; //cursor del raton
 
   }
 
@@ -28,5 +29,8 @@ export default class Player extends Phaser.GameObjects.Sprite { //es un gameobje
       this.body.setVelocityY(this.speed);
     }
 
+    let angle = 0;
+    angle = (Phaser.Math.Angle.Between(this.pointer.worldX,this.pointer.worldY,this.x,this.y))+90;  //NO ES PRECISO
+    this.rotation = angle;
   }
 }
