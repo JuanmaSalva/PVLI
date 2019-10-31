@@ -16,8 +16,9 @@ export default class Game extends Phaser.Scene { //es una escena
   create() {
     this.add.image(0, 0, 'fondo').setOrigin(0, 0);
     this.player = new Player(this, 'tank'); //crea un container Player
-    let barrel = new Canon(this,'redBarrel1');
+    let barrel = new Canon(this,'redBarrel1',this.player);
     this.player.add(barrel);
+
     }//inicializa todo
 
   update(){
