@@ -1,6 +1,6 @@
 export default class Canon extends Phaser.GameObjects.Sprite { //es un gameobject
     constructor(scene,imag, parent) { //imag es el sprite que se va a cargar
-        super(scene,0,-2,imag);
+        super(scene,17,17,imag);
         this.scene.add.existing(this); //le dice a la scene Game que existe
         
         this.pointer = this.scene.input.activePointer; //cursor del raton

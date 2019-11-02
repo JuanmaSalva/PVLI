@@ -1,6 +1,6 @@
 export default class Player extends Phaser.GameObjects.Container { //es un gameobject
   constructor(scene, imag) {
-    let aspecto = scene.add.sprite(0,0,imag); //creas el sprite
+    let aspecto = scene.add.sprite(0,0,imag).setOrigin(0,0); //creas el sprite
     super(scene, 100, 100, aspecto);
     this.scene.add.existing(this); //le dice a la scene Game que existe
     this.scene.physics.add.existing(this); //¿le da físicas?
@@ -8,7 +8,7 @@ export default class Player extends Phaser.GameObjects.Container { //es un gameo
 
     this.speed = 100;
 
-    this.cursors = this.scene.input.keyboard.createCursorKeys(); //el cursor de los huevos   
+    this.cursors = this.scene.input.keyboard.createCursorKeys(); //el cursor de los huevos
   }
 
 
