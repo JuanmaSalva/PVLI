@@ -22,7 +22,7 @@ export default class Game extends Phaser.Scene { //es una escena
     //this.p = new Player(this,'redBarrel1',500,500); //PROVISIONAL
     
     
-    let barrel = new Canon(this,'redBarrel1',this.player);
+    let barrel = new Canon(this,'redBarrel1',this.player).setOrigin(0.5,0);
     this.player.add(barrel);  
 
     //let mappy = this.add.tilemap('tilemap');
