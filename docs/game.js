@@ -7,7 +7,6 @@ export default class Game extends Phaser.Scene { //es una escena
   }
   preload() {
     this.load.image('tank', 'redTank.png');
-    this.load.image('fondo', 'fondo.png');
     this.load.image('redBarrel1', 'redBarrel.png');
 
     this.load.tilemapTiledJSON('tilemap', 'map.json');
@@ -17,6 +16,9 @@ export default class Game extends Phaser.Scene { //es una escena
 
 
   create() {
+
+    this.input.setDefaultCursor('url(docs/icon.cur), crosshair');
+
     //this.add.image(0, 0, 'fondo').setOrigin(0, 0);
     this.player = new Player(this, 'tank', 100, 100); //crea un container Player    
 
