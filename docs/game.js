@@ -10,26 +10,24 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('fondo', 'fondo.png');
     this.load.image('redBarrel1', 'redBarrel.png');
 
-    //this.load.tilemapTiledJSON('tilemap','mapa1.json');
-    //this.load.image('patronesTilemap' , 'terrainTiles_retina.png')
+    this.load.tilemapTiledJSON('tilemap', 'map.json');
+    this.load.image('patronesTilemap' , 'cosararaTiles.png');    
+
   } //cargar los recursos
 
 
   create() {
+    //this.add.image(0, 0, 'fondo').setOrigin(0, 0);
+    this.player = new Player(this, 'tank', 100, 100); //crea un container Player    
 
-    this.add.image(0, 0, 'fondo').setOrigin(0, 0);
-    this.player = new Player(this, 'tank',100,100); //crea un container Player
-    //this.p = new Player(this,'redBarrel1',500,500); //PROVISIONAL
-    
-    
-    let barrel = new Canon(this,'redBarrel1',this.player).setOrigin(0.5,0);
-    this.player.add(barrel);  
+    let barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0);
+    this.player.add(barrel);
 
-    //let mappy = this.add.tilemap('tilemap');
-    //let terrain = mappy.addTilesetImage('patrones', 'patronesTilemap');
-    //let botLayer = mappy.createStaticLayer("bot", [terrain]. 0 ,0);
-    }//inicializa todo
+    let map = this.make.tilemap({key: 'tilemap'});
+    let tileset =map.addTilesetImage('tiles','patronesTilemap');
+    let layer = map.createStaticLayer("Fondo",tileset,0,0).setDepth(-1); 
+  }//inicializa todo
 
-  update(){
+  update() {
   }
 }
