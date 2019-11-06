@@ -6,28 +6,23 @@ export default class Game extends Phaser.Scene { //es una escena
     super({ key: 'main' });
   }
   preload() {
-    this.load.image('tank', 'redTank.png');
-    this.load.image('redBarrel1', 'redBarrel.png');
-
-    this.load.tilemapTiledJSON('tilemap', 'map.json');
-    this.load.image('patronesTilemap' , 'cosararaTiles.png');    
-
+    this.load.image('tank', 'assets/redTank.png');
+    this.load.image('redBarrel1', 'assets/redBarrel.png');
+    this.load.tilemapTiledJSON('tilemap', 'assets/map.json');
+    this.load.image('patronesTilemap', 'assets/cosararaTiles.png');
   } //cargar los recursos
 
 
   create() {
 
-    this.input.setDefaultCursor('url(docs/icon.cur), crosshair');
+    this.input.setDefaultCursor('url(assets/icon.cur), pointer');
 
-    //this.add.image(0, 0, 'fondo').setOrigin(0, 0);
-    this.player = new Player(this, 'tank', 100, 100); //crea un container Player    
-
+    this.player = new Player(this, 'tank', 100, 100); //crea un container Player
     let barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0);
     this.player.add(barrel);
-
-    let map = this.make.tilemap({key: 'tilemap'});
-    let tileset =map.addTilesetImage('tiles','patronesTilemap');
-    let layer = map.createStaticLayer("Fondo",tileset,0,0).setDepth(-1); 
+    let map = this.make.tilemap({ key: 'tilemap' });
+    let tileset = map.addTilesetImage('tiles', 'patronesTilemap');
+    map.createStaticLayer("Fondo", tileset, 0, 0).setDepth(-1);
   }//inicializa todo
 
   update() {
