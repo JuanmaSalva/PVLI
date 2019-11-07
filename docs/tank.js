@@ -6,9 +6,6 @@ export default class Tank extends Phaser.GameObjects.Sprite {
   }
 
   preUpdate() {
-
-    let antAng = 90;
-
     if (this.parent.cursors.up.isDown) {
       this.angle = (0 + this.angle) / 2;
     } else if (this.parent.cursors.down.isDown) {
@@ -19,6 +16,5 @@ export default class Tank extends Phaser.GameObjects.Sprite {
     } else if (this.parent.cursors.left.isDown) {
       this.angle = -((270 + this.angle) / 2) - 90;
     }
-
   }
 }

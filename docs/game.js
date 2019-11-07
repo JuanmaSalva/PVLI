@@ -16,17 +16,17 @@ export default class Game extends Phaser.Scene { //es una escena
 
   create() {
 
-    this.input.setDefaultCursor('url(assets/icon.cur), pointer');
+    this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
 
     this.player = new Player(this, 100, 100); //crea un container Player
-    let barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0);
-    let tank = new Tank(this, 'tank', this.player).setOrigin(0.5,0.5);
+    let tank = new Tank(this, 'tank', this.player).setOrigin(0.5,0.5); //se crea el tanque en si
+    let barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0); //se crea el cañon
     this.player.add(tank);
-    this.player.add(barrel);
+    this.player.add(barrel); //se les añade al container player
     
-    let map = this.make.tilemap({ key: 'tilemap' });
-    let tileset = map.addTilesetImage('tiles', 'patronesTilemap');
-    map.createStaticLayer("Fondo", tileset, 0, 0).setDepth(-1);
+    let map = this.make.tilemap({ key: 'tilemap' }); //se crea el tilemap
+    let tileset = map.addTilesetImage('tiles', 'patronesTilemap'); //se crea el tileset desde el tilesheet
+    map.createStaticLayer("Fondo", tileset, 0, 0).setDepth(-1); //se crea el fondo desde el tileset
   }//inicializa todo
 
   update() {

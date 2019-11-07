@@ -1,7 +1,6 @@
 export default class Player extends Phaser.GameObjects.Container { //es un container
-  constructor(scene, imag, x, y) {
-    let aspecto = scene.add.sprite(); //creas el sprite
-    super(scene, x, y, aspecto);
+  constructor(scene, x, y) {
+    super(scene, x, y);
     this.scene.add.existing(this); //le dice a la scene Game que existe
     this.scene.physics.add.existing(this); //le otorga presencia fisica
     this.body.setCollideWorldBounds(); //colisiona con los bordes de la partida
@@ -25,6 +24,5 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     } else if (this.cursors.right.isDown) {
       this.body.setVelocityX(this.speed);
     } else this.body.setVelocityX(0);
-
   }
 }
