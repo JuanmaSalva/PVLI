@@ -8,6 +8,9 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this._maxSpeed = 100;
     this.speed = this._maxSpeed;
     this.cursors = this.scene.input.keyboard.createCursorKeys();
+    this.scena=scene;
+
+    this.arma = 'disparoSimple'; //indica que arma tiene seleccionada
   }
   
   preUpdate() {
@@ -25,4 +28,9 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
       this.body.setVelocityX(this.speed);
     } else this.body.setVelocityX(0);
   }
+
+  spawnBala = function () {
+    this.scena.spawnBala(this.x,this.y);
+}
+
 }
