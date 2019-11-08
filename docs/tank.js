@@ -17,12 +17,12 @@ export default class Tank extends Phaser.GameObjects.Sprite {
       this.angleObj += this.oldAngle = 180;
       this.dir += 1;      
     }
-    if (this.parent.cursors.right.isDown) {
-      this.angleObj += this.oldAngle = 90;
-      this.dir += 1;      
-    } else if (this.parent.cursors.left.isDown) {
+    if (this.parent.cursors.left.isDown) {
       this.angleObj += this.oldAngle = 270;
-      this.dir += 1;
+      this.dir += 1;     
+    } else if (this.parent.cursors.right.isDown) {
+      this.angleObj += this.oldAngle = 90;
+      this.dir += 1; 
     }
     if(this.angle = this.angleObj/(this.dir||1)){}
     else this.angle = this.oldAngle||0;
