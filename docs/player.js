@@ -10,27 +10,32 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.scena=scene;
 
+    this.w = scene.input.keyboard.addKey('W');
+    this.a = scene.input.keyboard.addKey('A');
+    this.s = scene.input.keyboard.addKey('S');
+    this.d = scene.input.keyboard.addKey('D');
+
     this.arma = 'disparoSimple'; //indica que arma tiene seleccionada
   }
   
   preUpdate() {
-    if ((this.cursors.up.isDown || this.cursors.down.isDown) && (this.cursors.left.isDown || this.cursors.right.isDown)) this.speed = this._maxSpeed * 71 / 100;
+    if ((this.cursors.up.isDown || this.cursors.down.isDown || this.s.isDown || this.w.isDown) && (this.cursors.left.isDown || this.cursors.right.isDown|| this.s.isDown || this.w.isDown)) this.speed = this._maxSpeed * 71 / 100;
     else this.speed = this._maxSpeed;
-    if (this.cursors.up.isDown) {
+    if (this.cursors.up.isDown || this.w.isDown) {
       this.body.setVelocityY(-this.speed);
-    } else if (this.cursors.down.isDown) {
+    } else if (this.cursors.down.isDown|| this.s.isDown) {
       this.body.setVelocityY(this.speed);
     } else this.body.setVelocityY(0);
 
-    if (this.cursors.left.isDown) {
+    if (this.cursors.left.isDown || this.a.isDown) {
       this.body.setVelocityX(-this.speed);
-    } else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown || this.d.isDown) {
       this.body.setVelocityX(this.speed);
     } else this.body.setVelocityX(0);
   }
 
   spawnBala = function () {
-    this.scena.spawnBala(this.x,this.y);
+    this.scena.spawnBala(this.x,this.y,this.arma);
 }
 
 }

@@ -15,8 +15,6 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('bala1', 'assets/bala1.png');
   } //cargar los recursos
 
-
-
   create() {
 
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
@@ -31,13 +29,15 @@ export default class Game extends Phaser.Scene { //es una escena
     let tileset = map.addTilesetImage('tiles', 'patronesTilemap'); //se crea el tileset desde el tilesheet
     map.createStaticLayer("Fondo", tileset, 0, 0).setDepth(-1); //se crea el fondo desde el tileset
 
-    this.poolBalas = new PoolBalas(this, 'bala1', 10); //crea la pool de todos las balas
+
+    //CREACION DE LAS POOLS DE BALAS
+    this.poolBalasSimples = new PoolBalas(this, 'bala1', 10,'disparosimple', 800,0,1); //crea la pool de todos las balas simples
   }//inicializa todo
 
   update() {
   }
 
-  spawnBala = function (x, y) {
-    this.poolBalas.spawn(x, y);
+  spawnBala = function (x, y,arma) {
+    if(arma == 'disparoSimple')this.poolBalasSimples.spawn(x, y);
   }
 }

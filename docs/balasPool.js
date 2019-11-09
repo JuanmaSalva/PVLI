@@ -1,13 +1,18 @@
 import Bullet from './bullet.js'
+import BulletSimple from './balaSimple.js'
 
 export default class Pool extends Phaser.GameObjects.Container {
-    constructor(scene,imag,numElementosPool) {        
+    constructor(scene,imag,numElementosPool, arma,velocidad,aceleracion,numrebotes) {        
         super(scene); //llama al constructor de la clase por encima
         
         this.pointer = this.scene.input.activePointer; //cursor del raton
 
         let entities = []; //vector de balas
-        for(let i=0;i<numElementosPool;i++) entities.push(new Bullet(scene, imag)); //creacion de las balas
+        for(let i=0;i<numElementosPool;i++){
+            if(arma == 'disparosimple') {                
+                entities.push(new BulletSimple(scene,imag,velocidad,numrebotes)); //creacion de las balas
+            }
+        } 
 
         this._group = scene.add.group();
         this._group.addMultiple(entities); //se añaden todas las balas
