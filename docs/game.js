@@ -30,14 +30,14 @@ export default class Game extends Phaser.Scene { //es una escena
     map.createStaticLayer("Fondo", tileset, 0, 0).setDepth(-1); //se crea el fondo desde el tileset
 
 
-    //CREACION DE LAS POOLS DE BALAS
-    this.poolBalasSimples = new PoolBalas(this, 'bala1', 10,'disparosimple', 800,0,1); //crea la pool de todos las balas simples
+    //CREACION DE LAS POOLS DE BALAS                                         //cadencia en milisegundos
+    this.poolBalasSimples = new PoolBalas(this, 'bala1', 10,'disparosimple', 800,0,1, 500); //crea la pool de todos las balas simples
   }//inicializa todo
 
   update() {
   }
 
   spawnBala = function (x, y,arma) {
-    if(arma == 'disparoSimple')this.poolBalasSimples.spawn(x, y);
+    if(arma == 'disparoSimple')this.poolBalasSimples.shoot(x, y);
   }
 }
