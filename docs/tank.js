@@ -9,7 +9,7 @@ export default class Tank extends Phaser.GameObjects.Sprite {
   preUpdate() {
     this.dir = 0;
     this.angleObj = 0;
-//
+
     if (this.parent.cursors.up.isDown || this.parent.w.isDown) {
       this.angleObj += this.oldAngle = 0;
       this.dir += 1;
