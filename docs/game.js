@@ -9,8 +9,8 @@ export default class Game extends Phaser.Scene { //es una escena
   preload() {
     this.load.image('tank', 'assets/redTank.png');
     this.load.image('redBarrel1', 'assets/redBarrel.png');
-    this.load.tilemapTiledJSON('tilemap', 'assets/map.json');
-    this.load.image('patronesTilemap', 'assets/cosararaTiles.png');
+    this.load.tilemapTiledJSON('tilemap', 'assets/mapaTiledCompleto.json');
+    this.load.image('patronesTilemap', 'assets/tilesDibujitos.png');
   } //cargar los recursos
 
 
@@ -24,9 +24,16 @@ export default class Game extends Phaser.Scene { //es una escena
     this.player.add(tank);
     this.player.add(barrel); //se les añade al container player
     
-    let map = this.make.tilemap({ key: 'tilemap' }); //se crea el tilemap
-    let tileset = map.addTilesetImage('tiles', 'patronesTilemap'); //se crea el tileset desde el tilesheet
-    map.createStaticLayer("Fondo", tileset, 0, 0).setDepth(-1); //se crea el fondo desde el tileset
+    let map = this.make.tilemap({ 
+      key: 'tilemap',
+      tileWidth: 64,
+      tileHeight:64
+  }); //se crea el tilemap
+    let tileset = map.addTilesetImage('tileSet', 'patronesTilemap'); //se crea el tileset desde el tilesheet
+    map.createStaticLayer("Background", tileset, 0, 0).setDepth(-1); //se crea el fondo desde el tileset
+    let paredes = map.createStaticLayer("Walls", tileset, 0, 0).setDepth(1);  //Capa de las paredes
+    paredes.setCollisionBetween(0,999); //Hacemos que todos los tiles de esta capa collisionen
+    this.physics.add.collider(this.player, paredes);  // avisamos a phaser que player colisona con paredes
   }//inicializa todo
 
   update() {
