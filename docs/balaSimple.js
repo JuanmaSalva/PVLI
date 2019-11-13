@@ -5,4 +5,9 @@ export default class BalaSimple extends Bullet{
         this.velocidad = vel; //pone la velocidad del padre
         this.rebotes=reb;
     }
+
+    preUpdate(){
+        
+    }
+
 }

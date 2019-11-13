@@ -37,7 +37,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.physics.add.collider(this.player, paredes);  // avisamos a phaser que player colisona con paredes
 
     //CREACION DE LAS POOLS DE BALAS                                         //cadencia en milisegundos
-    this.poolBalasSimples = new PoolBalas(this, 'bala1', 10,'disparosimple', 800,0,1, 500); //crea la pool de todos las balas simples
+    this.poolBalasSimples = new PoolBalas(this,paredes, 'bala1', 10,'disparosimple', 800,0,1, 1000); //crea la pool de todos las balas simples
   }//inicializa todo
 
   update() {
