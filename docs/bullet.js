@@ -10,6 +10,8 @@ export default class Bullet extends Phaser.GameObjects.Sprite { //es un gameobje
         this.direccion;
         this.velocidad;
         this.aceleracion;
+        this.cadencia;
+        this.rebotes;
     }
 
     preUpdate() {
@@ -22,12 +24,12 @@ export default class Bullet extends Phaser.GameObjects.Sprite { //es un gameobje
         this.direccion[1] = this.direccion[1] / modulo;
 
         this.body.setVelocityY(this.direccion[1] * this.velocidad);
-        this.body.setVelocityX(this.direccion[0] * this.velocidad);
+        this.body.setVelocityX(this.direccion[0] * this.velocidad); //se le da la velocidad a la bala
 
-        this.x = this.x + (30*this.direccion[0]);
-        this.y = this.y + (30*this.direccion[1]);
+        this.x = this.x + (30*this.direccion[0]); //esto segun la bala cambia F
+        this.y = this.y + (30*this.direccion[1]); //pone la bala en la punta del calñon
 
         this.angle = (Phaser.Math.Angle.Between(x + 10, y + 10, this.x, this.y) - Math.PI / 2);
-        this.rotation = this.angle;
-    }
+        this.rotation = this.angle;  //pone la bala apuntando al raton
+    } 
 }
