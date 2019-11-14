@@ -10,7 +10,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('tank', 'assets/redTank.png');
     this.load.image('redBarrel1', 'assets/redBarrel.png');
     this.load.tilemapTiledJSON('tilemap', 'assets/map.json');
-    this.load.image('patronesTilemap', 'assets/cosararaTiles.png');
+    this.load.image('patronesTilemap', 'assets/cosararaTiles.png');    
   } //cargar los recursos
 
 
@@ -24,6 +24,8 @@ export default class Game extends Phaser.Scene { //es una escena
     this.player.add(tank);
     this.player.add(barrel); //se les añade al container player
     
+    this.lifeUI = this.add.text(10, 10, 'Life: 100', { font: '36px Arial', fill: '#000000' });
+
     let map = this.make.tilemap({ key: 'tilemap' }); //se crea el tilemap
     let tileset = map.addTilesetImage('tiles', 'patronesTilemap'); //se crea el tileset desde el tilesheet
     map.createStaticLayer("Fondo", tileset, 0, 0).setDepth(-1); //se crea el fondo desde el tileset
