@@ -10,16 +10,16 @@ export default class Pool extends Phaser.GameObjects.Container {
         let entities = []; //vector de balas
         for(let i=0;i<numElementosPool;i++){
             if(arma == 'disparosimple') {                
-                entities.push(new BulletSimple(scene,imag,velocidad,numrebotes)); //creacion de las balas
+                entities.push(new BulletSimple(scene,imag,velocidad,numrebotes,paredes,this)); //creacion de las balas
             }
         } 
-
-        scene.physics.add.collider(paredes, entities, onCollision); //añade las colisiones con los muros
 
         this.cadencia = cad; //se pone aqui por que todas las balas tienen la misma cadencia y no lo necesitan internamente
         this.isShootable = false;
         this.recharging = true; //empiezan del reves por q si no cuendo cambias de escene dispara ya de una
         this.scena.time.addEvent({delay:100, callback: toggleShoot, callbackScope: this});
+
+
 
         this._group = scene.add.group();
         this._group.addMultiple(entities); //se añaden todas las balas
@@ -32,13 +32,9 @@ export default class Pool extends Phaser.GameObjects.Container {
     }
 }
 
-function onCollision(){
-    //lega la colision
-}
-
 
 Pool.prototype.spawn = function (x,y) {    
-    var entity = this._group.getFirstDead();
+    let entity = this._group.getFirstDead();
     if (entity) { //la inicializa
       entity.x = x;
       entity.y = y;
@@ -57,6 +53,25 @@ Pool.prototype.shoot = function (x,y) {
             this.recharging = true;
             this.scena.time.addEvent({delay:this.cadencia, callback: toggleShoot, callbackScope: this}) //llama al evento toggle pasado el tiempo de cadencia
         }
+    }
+}
+
+Pool.prototype.delete = function(bala){
+    let encontrado =false;
+    let i=0;
+    while(!encontrado){
+        if(this._group.children[i] = bala){
+            encontrado=true;
+            this._group.children[i].setActive(false);
+            this._group.children[i].setVisible(false);
+
+            this._group.children[i].x=this._group.children[i].y=0;
+            this._group.children[i].body.velocity.x = this._group.children[i].body.velocity.y = 0; //WTF XQ HAY Q PONER ESTO
+
+            this._group.children[i].direccion = Bullet.prototype.direccion; //NO SE POR Q HAY Q PONER wao
+        }
+
+        i++;
     }
 }
 
