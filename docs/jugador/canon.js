@@ -4,6 +4,12 @@ export default class Canon extends Phaser.GameObjects.Sprite { //es un gameobjec
         this.scene.add.existing(this); //le dice a la scene Game que existe        
         this.pointer = this.scene.input.activePointer; //cursor del raton
         this.parent = parent;
+
+        scene.input.on('pointerdown', pointer => { //creacion del evento de cuando se suelta el clic
+            //if(pointer.leftButtonDown()){
+            parent.spawnBala();
+            // }
+        })
     }
 
     preUpdate() {
