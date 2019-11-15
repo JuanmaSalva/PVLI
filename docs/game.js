@@ -10,8 +10,8 @@ export default class Game extends Phaser.Scene { //es una escena
   preload() {
     this.load.image('tank', 'assets/redTank.png');
     this.load.image('redBarrel1', 'assets/redBarrel.png');
-    this.load.tilemapTiledJSON('tilemap', 'assets/mapaTiledCompleto.json');
-    this.load.image('patronesTilemap', 'assets/tilesDibujitos.png');
+    this.load.tilemapTiledJSON('tilemap', 'assets/jsonMapDef1.json');
+    this.load.image('patronesTilemap', 'assets/tilesDibujitosV2.png');
     this.load.image('bala1', 'assets/bala1.png');
   } //cargar los recursos
 
@@ -30,14 +30,15 @@ export default class Game extends Phaser.Scene { //es una escena
       tileWidth: 64,
       tileHeight:64
   }); //se crea el tilemap
-    let tileset = map.addTilesetImage('tileSet', 'patronesTilemap'); //se crea el tileset desde el tilesheet
-    map.createStaticLayer("Background", tileset, 0, 0).setDepth(-1); //se crea el fondo desde el tileset
-    let paredes = map.createStaticLayer("Walls", tileset, 0, 0).setDepth(1);  //Capa de las paredes
+    let tileset = map.addTilesetImage('tilesDibujitosV2', 'patronesTilemap'); //se crea el tileset desde el tilesheet
+    map.createStaticLayer("Background", tileset, 0, 0).setDepth(-1).setScale(0.5); //se crea el fondo desde el tileset
+    let paredes = map.createStaticLayer("Walls", tileset, 0, 0).setDepth(1).setScale(0.5);  //Capa de las paredes
+    map.createStaticLayer("Deco", tileset, 0, 0).setDepth(1).setScale(0.5);
     paredes.setCollisionBetween(0,999); //Hacemos que todos los tiles de esta capa collisionen
     this.physics.add.collider(this.player, paredes);  // avisamos a phaser que player colisona con paredes
 
     //CREACION DE LAS POOLS DE BALAS                                         //cadencia en milisegundos
-    this.poolBalasSimples = new PoolBalas(this,paredes, 'bala1', 10,'disparosimple', 800,0,1, 1000); //crea la pool de todos las balas simples
+    this.poolBalasSimples = new PoolBalas(this,paredes, 'bala1', 1000,'disparosimple', 500,0,5, 0); //crea la pool de todos las balas simples
   }//inicializa todo
 
   update() {

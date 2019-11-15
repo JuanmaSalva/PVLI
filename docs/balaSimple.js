@@ -6,7 +6,10 @@ export default class BalaSimple extends Bullet{
         this.rebotesAcumulados = 0;
 
         scene.physics.add.collider(paredes,this,function(){
+            
             this.rebotesAcumulados++;
+            console.log('Rebotes acumulados: '+this.rebotesAcumulados);
+            console.log('Posicion: '+ this.x +' , '+ this.y);
             if(this.rebotesAcumulados <= reb){
                 let angle = (Phaser.Math.Angle.Between(this.x, this.y, this.x+this.body.velocity.x, this.y+this.body.velocity.y) - Math.PI / 2);
                 this.rotation = angle;  //pone la bala apuntando al raton
