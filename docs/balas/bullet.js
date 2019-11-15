@@ -6,12 +6,10 @@ export default class Bullet extends Phaser.GameObjects.Sprite { //es un gameobje
         this.body.setCollideWorldBounds(); //colisiona con los bordes de la partida
         this.setScale(1.5);
         this.body.setBounce(1,1);
-        //variables generales
+
         this.direccion;
         this.velocidad;
-        this.aceleracion;
-        this.cadencia;
-        this.rebotes;
+        this.daño;
     }
 
     preUpdate() {
