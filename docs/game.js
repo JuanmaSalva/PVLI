@@ -24,8 +24,9 @@ export default class Game extends Phaser.Scene { //es una escena
     let barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0); //se crea el cañon
     this.player.add(tank);
     this.player.add(barrel); //se les añade al container player    
-    this.lifeUI = this.add.text(10, 10, 'Life: 100', { font: '36px Arial', fill: '#000000' });
-    
+    this.lifeUI = this.add.text(10, 4, 'Life: 100', { font: '24px Arial', fill: '#ffffff' });
+    this.lifeUI.setDepth(10);
+
     let map = this.make.tilemap({
       key: 'tilemap',
       tileWidth: 64,
