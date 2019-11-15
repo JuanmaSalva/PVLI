@@ -23,8 +23,9 @@ export default class Game extends Phaser.Scene { //es una escena
     let tank = new Tank(this, 'tank', this.player).setOrigin(0.5, 0.5); //se crea el tanque en si
     let barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0); //se crea el cañon
     this.player.add(tank);
-    this.player.add(barrel); //se les añade al container player
-
+    this.player.add(barrel); //se les añade al container player    
+    this.lifeUI = this.add.text(10, 10, 'Life: 100', { font: '36px Arial', fill: '#000000' });
+    
     let map = this.make.tilemap({
       key: 'tilemap',
       tileWidth: 64,
@@ -42,6 +43,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.poolBalasRafagas = new PoolBalas(this, paredes, 'bala1', 15, 'rafagas', 500, 0, 0, 1000, 13);
     this.poolBalasRebotador = new PoolBalas(this,paredes,'bala1', 10,  'rebotador', 500,        100,      5,     1000,    17);
   }//inicializa todo                     //scena,paredes,sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño
+
 
   update() {
   }
