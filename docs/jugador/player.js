@@ -33,18 +33,19 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.dealDmg = function (damage) { //metodo en el que recibes daño
       this.life -= damage;
 
-      if (this.life >= 0) {
+      if (this.life >= 0 && this.life <= this._maxLife) {
         console.log('Vida: ' + this.life);
-      } else {
+      } else if (this.life <= 0) {
         this.life = 0;
         console.log('Murio wey');
-      }
+      }else this.life = this._maxLife;
     }
 
     this.revive = function () { //se revive al juegador
       this.life = this._maxLife;
       console.log('1up');
-    }
+    } 
+
   }
 
   preUpdate() {
@@ -68,12 +69,12 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     else if (this.n.isDown) this.arma = this.armas[1];//PROVISIONAL
     else if (this.m.isDown) this.arma = this.armas[2];   //PROVISIONAL
 
-    if (this.u.isDown) this.dealDmg(-10);//PROVISIONAL
-    else if (this.j.isDown) this.dealDmg(10);//PROVISIONAL
+    if (this.u.isDown) this.dealDmg(-1);//PROVISIONAL
+    else if (this.j.isDown) this.dealDmg(1);//PROVISIONAL
     else if (this.k.isDown) this.revive();//PROVISIONAL
 
     
-    this.scena.lifeUI.setText('Life: '+this.life); //actualiza la ui
+    this.scena.lifeBar.displayWidth = this.life*1.6;
   }
 
   spawnBala = function () {

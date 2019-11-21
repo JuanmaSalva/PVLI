@@ -13,6 +13,8 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.tilemapTiledJSON('tilemap', 'assets/jsonMapDef1.json');
     this.load.image('patronesTilemap', 'assets/tilesDibujitosV2.png');
     this.load.image('bala1', 'assets/bala1.png');
+    this.load.image('barraVida', 'assets/BarraVida.png');
+    this.load.image('containerVida', 'assets/ContainerVida.png');
   } //cargar los recursos
 
   create() {
@@ -23,10 +25,12 @@ export default class Game extends Phaser.Scene { //es una escena
     let tank = new Tank(this, 'tank', this.player).setOrigin(0.5, 0.5); //se crea el tanque en si
     let barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0); //se crea el cañon
     this.player.add(tank);
-    this.player.add(barrel); //se les añade al container player    
-    this.lifeUI = this.add.text(10, 4, 'Life: 100', { font: '24px Arial', fill: '#ffffff' });
-    this.lifeUI.setDepth(10);
+    this.player.add(barrel); //se les añade al container player   
 
+    this.lifeContainer = this.add.image(1, 1, 'containerVida').setOrigin(0,0).setDepth(10);
+    this.lifeContainer.displayWidth = 170;
+    this.lifeBar = this.add.image(8, 7, 'barraVida').setOrigin(0,0).setDepth(9);
+    
     let map = this.make.tilemap({
       key: 'tilemap',
       tileWidth: 64,
