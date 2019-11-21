@@ -10,13 +10,12 @@ export default class Canon extends Phaser.GameObjects.Sprite { //es un gameobjec
         this.rango;
 
         scene.input.on('pointerdown', pointer => { //creacion del evento de cuando se suelta el clic
-            parent.spawnBala();
+            if(this.arma != 'mortero')parent.spawnBala();
         })
 
-
-        scene.input.on('pointerup', pointer => { //creacion del evento de cuando se suelta el clic
-            if (this.circulo) this.circulo.destroy();
-            console.log("Ha salido");
+        scene.input.on('pointerup', pointer => { //creacion del evento de cuando se suelta el clic            
+            if (this.arma == 'mortero' && this.circulo) this.circulo.destroy(); 
+            if(this.arma == 'mortero' && pointer.leftButtonReleased())parent.spawnBala();
         })
     }
 

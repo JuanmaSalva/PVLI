@@ -37,6 +37,8 @@ export default class Pool extends Phaser.GameObjects.Container {
         })
 
         this.scene.add.existing(this); //le dice a la scene Game que existe
+
+        if(rango)scene.setRangeMortero(rango);
     }
 }
 
@@ -65,6 +67,9 @@ Pool.prototype.shoot = function (x, y) {
             this.scena.time.delayedCall(100, this.rafaga, [], this)
             this.scena.time.delayedCall(200, this.rafaga, [], this)
         }
+        else if(this.arma == "mortero"){
+            
+        }
 
         this.isShootable = false; //no puede dispara
 
@@ -75,7 +80,7 @@ Pool.prototype.shoot = function (x, y) {
     }
 }
 
-Pool.prototype.delete = function (bala) {
+Pool.prototype.delete = function (bala,isMortero) {
     let encontrado = false;
     let i = 0;
     while (!encontrado) {
@@ -85,9 +90,10 @@ Pool.prototype.delete = function (bala) {
             this._group.children[i].setVisible(false);
 
             this._group.children[i].x = this._group.children[i].y = 50;
-            this._group.children[i].body.velocity.x = this._group.children[i].body.velocity.y = 0; //WTF XQ HAY Q PONER ESTO
+            this._group.children[i].body.velocity.x = this._group.children[i].body.velocity.y = 0;
 
-            this._group.children[i].direccion = Bullet.prototype.direccion; //NO SE POR Q HAY Q PONER wao
+            if(isMortero) this._group.children[i].direccion = BulletMortero.prototype.direccion; //si no se pone esto la funcion de direccion deja de funcionar
+            else this._group.children[i].direccion = Bullet.prototype.direccion; //si no se pone esto la funcion de direccion deja de funcionar
         }
 
         i++;
