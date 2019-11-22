@@ -67,10 +67,7 @@ Pool.prototype.shoot = function (x, y) {
             this.scena.time.delayedCall(100, this.rafaga, [], this)
             this.scena.time.delayedCall(200, this.rafaga, [], this)
         }
-        else if(this.arma == "mortero"){
-            
-        }
-
+        
         this.isShootable = false; //no puede dispara
 
         if (!this.recharging) {

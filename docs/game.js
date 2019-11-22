@@ -2,6 +2,7 @@ import Player from './jugador/player.js'
 import Canon from './jugador/canon.js'
 import Tank from './jugador/tank.js'
 import PoolBalas from './balas/balasPool.js'
+import ExplosionAnim from './balas/explosion.js'
 
 export default class Game extends Phaser.Scene { //es una escena
   constructor() {
@@ -13,7 +14,8 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.tilemapTiledJSON('tilemap', 'assets/jsonMapDef1.json');
     this.load.image('patronesTilemap', 'assets/tilesDibujitosV2.png');
     this.load.image('bala1', 'assets/bala1.png');
-    this.load.image('balaMortero' ,'assets/balaMortero.png' )
+    this.load.image('balaMortero' ,'assets/balaMortero.png')
+    this.load.image('animacion', 'assets/explosion.png');
   } //cargar los recursos
 
   create() {
@@ -45,7 +47,7 @@ export default class Game extends Phaser.Scene { //es una escena
     //CREACION DE LAS POOLS DE BALAS           //esta el player para las colisiones                                     
     this.poolBalasSimples = new PoolBalas(this, paredes,this.player, 'bala1', 10, 'disparosimple', 500, 0, 1, 700, 20); //crea la pool de todos las balas simples
     this.poolBalasRafagas = new PoolBalas(this, paredes,this.player, 'bala1', 15, 'rafagas', 500, 0, 0, 1000, 13);
-    this.poolBalasMortero = new PoolBalas(this, paredes,this.player, 'balaMortero', 15, 'mortero', 1000, 0, 0, 1000, 13, 250);    
+    this.poolBalasMortero = new PoolBalas(this, null,this.player, 'balaMortero', 7, 'mortero', 1000, 0, 0, 1000, 13, 250);    
     this.poolBalasRebotador = new PoolBalas(this, paredes,this.player, 'bala1', 10, 'rebotador', 500, 100, 5, 1000, 17);
   }//inicializa todo                     //scena,paredes,     player ,  sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño, rango
 
@@ -71,5 +73,9 @@ export default class Game extends Phaser.Scene { //es una escena
   canonPosition = function () {
     let pos = [this.player.x, this.player.y]
     return pos;
+  }
+
+  explosion(x,y){
+    new ExplosionAnim(this,x,y,'animacion');
   }
 }

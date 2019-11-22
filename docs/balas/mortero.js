@@ -9,12 +9,15 @@ export default class BalaMortero extends Phaser.GameObjects.Sprite {
         this.daño = damage;
         this.rango = rango;
         this.setScale(0.5);
+        this.setDepth(0);
         this.pool = pool;
+        this.scene = scene;
 
         this.isMoving = false;
         this.medio = false;
 
-        this.scala = 0.5;
+        this.escalaInicial = 1
+        this.scala = this.escalaInicial;
     }
 
     preUpdate() {
@@ -33,9 +36,13 @@ export default class BalaMortero extends Phaser.GameObjects.Sprite {
                     this.isMoving = false;
                     this.medio = false;
                     this.velocidad = this.velocidadIni;
-                    this.scala=0.5;
+                    this.scala=this.escalaInicial;
 
+
+                    this.scene.explosion(this.x, this.y);
                     this.pool.delete(this, true); //destruirse
+
+                    
                 }
             }
         }
