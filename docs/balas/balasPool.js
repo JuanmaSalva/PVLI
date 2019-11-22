@@ -12,14 +12,15 @@ export default class Pool extends Phaser.GameObjects.Container {
 
         let entities = []; //vector de balas
         for (let i = 0; i < numElementosPool; i++) {
-            if (arma == 'disparosimple') entities.push(new BulletSimple(scene, imag, velocidad, numrebotes, paredes, this, 0, daño)); //creacion de las balas
-            else if (arma == 'rafagas') entities.push(new BulletRafaga(scene, imag, velocidad, numrebotes, paredes, this, 0, daño)); //creacion de las balas
-            else if (arma == 'rebotador') entities.push(new BulletRebotador(scene, imag, velocidad, numrebotes, paredes, this, aceleracion, daño)); //creacion de las balas
-            else if (arma == 'mortero') entities.push(new BulletMortero(scene, imag, velocidad, this, daño, rango)); //creacion de las balas
+            if (arma === 'disparosimple') entities.push(new BulletSimple(scene, imag, velocidad, numrebotes, paredes, this, 0, daño)); //creacion de las balas
+            else if (arma === 'rafagas') entities.push(new BulletRafaga(scene, imag, velocidad, numrebotes, paredes, this, 0, daño)); //creacion de las balas
+            else if (arma === 'rebotador') entities.push(new BulletRebotador(scene, imag, velocidad, numrebotes, paredes, this, aceleracion, daño)); //creacion de las balas
+            else if (arma === 'mortero') entities.push(new BulletMortero(scene, imag, velocidad, this, daño, rango)); //creacion de las balas
 
             entities[i].x = entities[i].y = 50;
             entities[i].body.velocity.x = entities[i].body.velocity.y = 0;
-            entities[i].setDepth(-1); //informacion default para cada bala
+            if(arma === 'mortero') entities[i].setDepth(1);
+            else entities[i].setDepth(-1);
         }
 
         this.arma = arma;
@@ -40,67 +41,65 @@ export default class Pool extends Phaser.GameObjects.Container {
 
         if(rango)scene.setRangeMortero(rango);
     }
-}
 
-Pool.prototype.spawn = function (x, y) {
-    let entity = this._group.getFirstDead();
-    if (entity) { //la inicializa
-        entity.x = x;
-        entity.y = y;
-        entity.setActive(true);
-        entity.setVisible(true);
-        entity.direccion(this.pointer.worldX, this.pointer.worldY);
+    spawn = function (x, y) {
+        let entity = this._group.getFirstDead();
+        if (entity) { //la inicializa
+            entity.x = x;
+            entity.y = y;
+            entity.setActive(true);
+            entity.setVisible(true);
+            entity.direccion(this.pointer.worldX, this.pointer.worldY);
+        }
+        return entity;
     }
-    return entity;
-}
 
-Pool.prototype.rafaga = function () {
-    let pos = this.scena.canonPosition();
-    this.spawn(pos[0], pos[1]); //dispara
-}
-
-Pool.prototype.shoot = function (x, y) {
-    if (this.isShootable && !this.recharging) {
-        this.spawn(x, y); //dispara
-
-        if (this.arma == "rafagas") { //si el arma selecionada en rafagas hay un delay de 100 entre cada bala
-            this.scena.time.delayedCall(100, this.rafaga, [], this)
-            this.scena.time.delayedCall(200, this.rafaga, [], this)
+    rafaga = function () {
+        let pos = this.scena.canonPosition();
+        this.spawn(pos[0], pos[1]); //dispara
+    }
+    
+    shoot = function (x, y) {
+        if (this.isShootable && !this.recharging) {
+            this.spawn(x, y); //dispara
+    
+            if (this.arma == "rafagas") { //si el arma selecionada en rafagas hay un delay de 100 entre cada bala
+                this.scena.time.delayedCall(100, this.rafaga, [], this)
+                this.scena.time.delayedCall(200, this.rafaga, [], this)
+            }
+            else if(this.arma == "mortero"){
+                
+            }
+    
+            this.isShootable = false; //no puede dispara
+    
+            if (!this.recharging) {
+                this.recharging = true;
+                this.scena.time.addEvent({ delay: this.cadencia, callback: toggleShoot, callbackScope: this }) //llama al evento toggle pasado el tiempo de cadencia
+            }
         }
-        else if(this.arma == "mortero"){
-            
-        }
+    }
 
-        this.isShootable = false; //no puede dispara
-
-        if (!this.recharging) {
-            this.recharging = true;
-            this.scena.time.addEvent({ delay: this.cadencia, callback: toggleShoot, callbackScope: this }) //llama al evento toggle pasado el tiempo de cadencia
+    delete = function (bala,isMortero) {
+        let encontrado = false;
+        let i = 0;
+        while (!encontrado) {
+            if (this._group.children[i] = bala) {
+                encontrado = true;
+                this._group.children[i].setActive(false);
+                this._group.children[i].setVisible(false);
+    
+                this._group.children[i].x = this._group.children[i].y = 50;
+                this._group.children[i].body.velocity.x = this._group.children[i].body.velocity.y = 0;
+    
+                if(isMortero) this._group.children[i].direccion = BulletMortero.prototype.direccion; //si no se pone esto la funcion de direccion deja de funcionar
+                else this._group.children[i].direccion = Bullet.prototype.direccion; //si no se pone esto la funcion de direccion deja de funcionar
+            }
+    
+            i++;
         }
     }
 }
-
-Pool.prototype.delete = function (bala,isMortero) {
-    let encontrado = false;
-    let i = 0;
-    while (!encontrado) {
-        if (this._group.children[i] = bala) {
-            encontrado = true;
-            this._group.children[i].setActive(false);
-            this._group.children[i].setVisible(false);
-
-            this._group.children[i].x = this._group.children[i].y = 50;
-            this._group.children[i].body.velocity.x = this._group.children[i].body.velocity.y = 0;
-
-            if(isMortero) this._group.children[i].direccion = BulletMortero.prototype.direccion; //si no se pone esto la funcion de direccion deja de funcionar
-            else this._group.children[i].direccion = Bullet.prototype.direccion; //si no se pone esto la funcion de direccion deja de funcionar
-        }
-
-        i++;
-    }
-}
-
-
 
 function toggleShoot() {
     this.isShootable = true;
