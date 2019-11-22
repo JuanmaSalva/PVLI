@@ -1,0 +1,27 @@
+{
+  "name": "pvli",
+  "version": "1.0.0",
+  "description": "uwu",
+  "main": "server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuanmaSalva/PVLI.git"
+  },
+  "author": "si",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuanmaSalva/PVLI/issues"
+  },
+  "homepage": "https://github.com/JuanmaSalva/PVLI#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
