@@ -14,8 +14,8 @@ export default class Canon extends Phaser.GameObjects.Sprite { //es un gameobjec
         })
 
         scene.input.on('pointerup', pointer => { //creacion del evento de cuando se suelta el clic            
-            if (this.arma == 'mortero' && this.circulo) this.circulo.destroy(); 
-            if(this.arma == 'mortero' && pointer.leftButtonReleased())parent.spawnBala();
+            if (this.arma === 'mortero' && this.circulo) this.circulo.destroy(); 
+            if(this.arma === 'mortero' && pointer.leftButtonReleased())parent.spawnBala();
         })
     }
 
@@ -30,14 +30,11 @@ export default class Canon extends Phaser.GameObjects.Sprite { //es un gameobjec
         }
     }
 
+    setRange = function (rango) {
+        this.rango = rango;
+    }
 
-}
-
-Canon.prototype.setRange = function (rango) {
-    this.rango = rango;
-}
-
-
-Canon.prototype.setArma = function (arma) {
-    this.arma = arma;
+    setArma = function (arma) {
+        this.arma = arma;
+    }
 }
