@@ -15,7 +15,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('patronesTilemap', 'assets/tilesDibujitosV2.png');
     this.load.image('bala1', 'assets/bala1.png');
     this.load.image('balaMortero' ,'assets/balaMortero.png')
-    this.load.image('animacion', 'assets/explosion.png');
+    this.load.spritesheet('animacion', 'assets/explosion.png',{frameWidth:64,frameHeight:64});
   } //cargar los recursos
 
   create() {
@@ -76,6 +76,6 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   explosion(x,y){
-    new ExplosionAnim(this,x,y,'animacion');
+    new ExplosionAnim(this,x,y,'animacion'); //crea la animacion de la explosion en el lugar dado
   }
 }

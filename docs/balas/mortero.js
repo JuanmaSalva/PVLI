@@ -25,12 +25,13 @@ export default class BalaMortero extends Phaser.GameObjects.Sprite {
             if (!this.medio) {
                 this.scala = this.scala + 0.1;
                 this.setScale(this.scala);
-                if ((this.direccion[0] > 0 && this.x > this.puntoMedio[0])||(this.direccion[0] < 0 && this.x < this.puntoMedio[0])) this.medio = true;
+                if ((this.direccion[1] > 0 && this.y > this.puntoMedio[1]) || (this.direccion[1] < 0 && this.y < this.puntoMedio[1])
+                || (this.direccion[0] > 0 && this.x > this.puntoMedio[0]) && (this.direccion[0] < 0 && this.x < this.puntoMedio[0])) this.medio = true;
             }
             else {
                 this.scala = this.scala - 0.1;
                 this.setScale(this.scala);
-                if ((this.direccion[0] > 0 && this.x > this.puntoFin[0])||(this.direccion[0] < 0 && this.x < this.puntoFin[0])) {
+                if (this.scala<this.escalaInicial) {
 
                     //reset de todos los valores necesarios para que esto no se mame
                     this.isMoving = false;
@@ -47,8 +48,6 @@ export default class BalaMortero extends Phaser.GameObjects.Sprite {
             }
         }
     }
-
-
 }
 
 BalaMortero.prototype.direccion = function (x, y) { //le llega la posicion del raton y calcula su direccion
@@ -58,15 +57,12 @@ BalaMortero.prototype.direccion = function (x, y) { //le llega la posicion del r
     this.direccion[1] = this.direccion[1] / modulo;
 
     //DESTINO
-    this.destino = Phaser.Math.Distance.Between(x, y, this.x, this.y);
-    if (this.destino > this.rango) {
-        this.destino = this.rango; //si se sale del rango lo capa
-        this.puntoFin = [this.x + this.direccion[0] * this.destino, this.y + this.direccion[1] * this.destino];
-    }
-    else this.puntoFin = [x, y];
+    this.distancia = Phaser.Math.Distance.Between(x, y, this.x, this.y);
+    if (this.distancia > this.rango) this.distancia = this.rango; //si se sale del rango lo capa
 
+    this.puntoFin = [this.x + this.direccion[0] * this.distancia, this.y + this.direccion[1] * this.distancia];
     //VELOCIDAD
-    this.velocidad = (this.destino/(this.velocidad/1000))
+    this.velocidad = (this.distancia/(this.velocidad/1000))
     this.body.setVelocityY(this.direccion[1] * this.velocidad);
     this.body.setVelocityX(this.direccion[0] * this.velocidad); //se le da la velocidad a la bala
 
@@ -76,6 +72,7 @@ BalaMortero.prototype.direccion = function (x, y) { //le llega la posicion del r
     this.angle = (Phaser.Math.Angle.Between(x + 10, y + 10, this.x, this.y) - Math.PI / 2);
     this.rotation = this.angle;  //pone la bala apuntando al raton
 
+console.log()
 
     this.puntoMedio = [(this.x + this.puntoFin[0]) / 2, (this.y + this.puntoFin[1]) / 2];
     this.isMoving = true;

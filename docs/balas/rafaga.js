@@ -6,7 +6,7 @@ export default class BalaRafaga extends Bullet {
         this.daño = damage;
 
         scene.physics.add.collider(paredes, this, function () {
-            pool.delete(this); //destruirse           
+            pool.delete(this,false); //destruirse           
         }, null, this); //añade las colisiones con los muros
 
     }
