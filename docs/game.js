@@ -27,10 +27,13 @@ export default class Game extends Phaser.Scene { //es una escena
     this.player.add(tank);
     this.player.add(barrel); //se les añade al container player   
 
-    this.lifeContainer = this.add.image(1, 1, 'containerVida').setOrigin(0,0).setDepth(10);
+    this.lifeContainer = this.add.image(1, 1, 'containerVida').setOrigin(0, 0).setDepth(10);
     this.lifeContainer.displayWidth = 170;
-    this.lifeBar = this.add.image(8, 7, 'barraVida').setOrigin(0,0).setDepth(9);
-    
+    this.lifeBar = this.add.image(8, 7, 'barraVida').setOrigin(0, 0).setDepth(9);
+
+    this.shootContainer = this.add.image(31, 35, 'containerVida').setOrigin(0, 0).setDepth(10).setAngle(90).setTint((0x85f9ff));
+    this.shootBar = this.add.image(25, 41, 'barraVida').setOrigin(0, 0).setDepth(9).setAngle(90).setTint(0x26ff00);
+
     let map = this.make.tilemap({
       key: 'tilemap',
       tileWidth: 64,
@@ -46,11 +49,16 @@ export default class Game extends Phaser.Scene { //es una escena
     //CREACION DE LAS POOLS DE BALAS                                                          
     this.poolBalasSimples = new PoolBalas(this, paredes, 'bala1', 10, 'disparosimple', 500, 0, 1, 700, 20); //crea la pool de todos las balas simples
     this.poolBalasRafagas = new PoolBalas(this, paredes, 'bala1', 15, 'rafagas', 500, 0, 0, 1000, 13);
-    this.poolBalasRebotador = new PoolBalas(this,paredes,'bala1', 10,  'rebotador', 500,        100,      5,     1000,    17);
+    this.poolBalasRebotador = new PoolBalas(this, paredes, 'bala1', 10, 'rebotador', 500, 100, 5, 2000, 17);
   }//inicializa todo                     //scena,paredes,sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño
 
 
   update() {
+
+    if (this.shootContainer.displayWidth > this.shootBar.displayWidth + 10) {
+      this.shootBar.displayWidth += 4;
+    }
+
   }
 
   //se ha disparado y segun el arma se llama a la pool adecuada
@@ -65,4 +73,24 @@ export default class Game extends Phaser.Scene { //es una escena
     let pos = [this.player.x, this.player.y]
     return pos;
   }
+
+  //se llama al disparar y resetea la barra de recarga
+  triggerRechargeUI = function (time) {
+    this.shootContainer.displayWidth = time / 4;
+    this.shootBar.displayWidth = 0;
+    this.shootBar.setTint(0x707070);
+  }
+
+  //actualiza la barra al cambiar de arma
+  triggerChangeUI = function (time) {
+    this.shootContainer.displayWidth = time / 4;
+    this.shootBar.displayWidth = time / 4 - 10;
+  }
+
+  //cambia el color de la barra cuando esta lista el arma
+  triggerRechargeOkay = function () {
+    this.shootBar.setTint(0x26ff00);
+  }
+
+
 }

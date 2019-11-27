@@ -11,19 +11,19 @@ export default class Pool extends Phaser.GameObjects.Container {
 
         let entities = []; //vector de balas
         for (let i = 0; i < numElementosPool; i++) {
-            if (arma == 'disparosimple') {
+            if (arma === 'disparosimple') {
                 entities.push(new BulletSimple(scene, imag, velocidad, numrebotes, paredes, this,0,daño)); //creacion de las balas
                 entities[i].x = entities[i].y = 50;
                 entities[i].body.velocity.x = entities[i].body.velocity.y= 0;
                 entities[i].setDepth(-1)
             }
-            else if(arma == 'rafagas'){
+            else if(arma === 'rafagas'){
                 entities.push(new BulletRafaga(scene, imag, velocidad, numrebotes, paredes, this,0,daño)); //creacion de las balas
                 entities[i].x = entities[i].y = 50;
                 entities[i].body.velocity.x = entities[i].body.velocity.y= 0;
                 entities[i].setDepth(-1)
             }
-            else if(arma == 'rebotador'){
+            else if(arma === 'rebotador'){
                 entities.push(new BulletRebotador(scene, imag, velocidad, numrebotes, paredes, this,aceleracion,daño)); //creacion de las balas
                 entities[i].x = entities[i].y = 50;
                 entities[i].body.velocity.x = entities[i].body.velocity.y= 0;
@@ -32,8 +32,8 @@ export default class Pool extends Phaser.GameObjects.Container {
         }
 
         this.arma = arma;
-
         this.cadencia = cad; //se pone aqui por que todas las balas tienen la misma cadencia y no lo necesitan internamente
+        this.cooldownCad = cad; //para la ui
         this.isShootable = false;
         this.recharging = true; //empiezan del reves por q si no cuendo cambias de escene dispara ya de una
         this.scena.time.addEvent({ delay: 100, callback: toggleShoot, callbackScope: this });
@@ -74,7 +74,7 @@ Pool.prototype.shoot = function (x, y) {
     if (this.isShootable && !this.recharging) {
         this.spawn(x, y); //dispara
 
-        if(this.arma == "rafagas"){ //si el arma selecionada en rafagas hay un delay de 100 entre cada bala
+        if(this.arma === "rafagas"){ //si el arma selecionada en rafagas hay un delay de 100 entre cada bala
             this.scena.time.delayedCall(100,this.rafaga,[],this)
             this.scena.time.delayedCall(200,this.rafaga,[],this)
         }
@@ -83,7 +83,9 @@ Pool.prototype.shoot = function (x, y) {
 
         if (!this.recharging) {
             this.recharging = true;
+            console.log(this.cadencia);
             this.scena.time.addEvent({ delay: this.cadencia, callback: toggleShoot, callbackScope: this }) //llama al evento toggle pasado el tiempo de cadencia
+            this.scena.triggerRechargeUI(this.cadencia);
         }
     }
 }
@@ -110,4 +112,5 @@ Pool.prototype.delete = function (bala) {
 function toggleShoot() {
     this.isShootable = true;
     this.recharging = false;
+    this.scena.triggerRechargeOkay();
 }
