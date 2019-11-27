@@ -11,6 +11,7 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.scena = scene;
     this._maxLife = 100;
     this.life = this._maxLife;
+    this.canon;
 
     this.u = scene.input.keyboard.addKey('U'); //teclas provisionales para la vida en ui
     this.j = scene.input.keyboard.addKey('J');
@@ -24,9 +25,10 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.b = scene.input.keyboard.addKey('B'); //teclas provisionales para el cambio de arma
     this.n = scene.input.keyboard.addKey('N');
     this.m = scene.input.keyboard.addKey('M');
+    this.v = scene.input.keyboard.addKey('V');
 
 
-    this.armas = ['disparoSimple', 'rafagas', 'rebotador'];
+    this.armas = ['disparoSimple', 'rafagas', 'rebotador','mortero'];
     this.arma = this.armas[0]; //indica que arma tiene seleccionada
 
     
@@ -67,6 +69,9 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     if (this.b.isDown) this.arma = this.armas[0];//PROVISIONAL
     else if (this.n.isDown) this.arma = this.armas[1];//PROVISIONAL
     else if (this.m.isDown) this.arma = this.armas[2];   //PROVISIONAL
+    else if (this.v.isDown) this.arma = this.armas[3];   //PROVISIONAL
+    this.canon.setArma(this.arma);
+
 
     if (this.u.isDown) this.dealDmg(-10);//PROVISIONAL
     else if (this.j.isDown) this.dealDmg(10);//PROVISIONAL

@@ -24,9 +24,9 @@
             input: {
                 gamepad: true
             },
-            scale: {
-                mode: Phaser.Scale.FIT, //SI QUIAMOS ESTO SE VE ENTERO SIN TENER QUE BAJAR PERO ES BASTANTE MAS PEQUEÑO
-                autoCenter: Phaser.Scale.CENTER_BOTH
+            scale: {                
+               // mode: Phaser.Scale.FIT
+               autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
             },
             scene: [Menu, Game],
             physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
