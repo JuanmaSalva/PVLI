@@ -24,10 +24,8 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.a = scene.input.keyboard.addKey('A');
     this.s = scene.input.keyboard.addKey('S');
     this.d = scene.input.keyboard.addKey('D');
-
     this.q = scene.input.keyboard.addKey('Q');
 
-   
 
     this.dealDmg = function (damage) { //metodo en el que recibes daño
       this.life -= damage;
@@ -43,6 +41,9 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
       this.life = this._maxLife;
       console.log('1up');
     }
+
+    let q = scene.input.keyboard.addKey('Q');  //boton de cambio de arma
+    q.on('down', this.cambioArma, this);
   }
 
   preUpdate() {
@@ -58,40 +59,34 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
       this.body.setVelocityX(-this.speed);
     } else if (this.cursors.right.isDown || this.d.isDown) {
       this.body.setVelocityX(this.speed);
-    } else this.body.setVelocityX(0);   
+    } else this.body.setVelocityX(0);
 
 
     if (this.u.isDown) this.dealDmg(-10);//PROVISIONAL
     else if (this.j.isDown) this.dealDmg(10);//PROVISIONAL
     else if (this.k.isDown) this.revive();//PROVISIONAL   
-    
-    this.scena.lifeUI.setText('Life: '+this.life); //actualiza la ui
 
-    if(this.q.isUp){    //AQUI PETA
-      this.cambioArma();
-    }
+    this.scena.lifeUI.setText('Life: ' + this.life); //actualiza la ui
   }
 
   spawnBala = function (arma) {
-    console.log(arma);
     this.scena.spawnBala(this.x, this.y, arma);
   }
 
-  setArmas(p,s){
+  setArmas(p, s) {
     this.armaPrincipal = p;
     this.armaSecundaria = s;
     this.canon.setArma(this.armaPrincipal); //siempre empieza con el arma principal
   }
 
-
-  cambioArma(){
-    if(this.armaSeleccionada){
+  cambioArma() {
+    if (this.armaSeleccionada) { //cambia de arma segun la que tiene seleccionada el jugador
       this.armaSeleccionada = false;
+      this.canon.setArma(this.armaSecundaria);
+    }
+    else {
+      this.armaSeleccionada = true;
       this.canon.setArma(this.armaPrincipal);
     }
-    else{
-      this.armaSeleccionada = true;
-      this.canon.setArma(this.armaSecundaria);
-    } 
   }
 }

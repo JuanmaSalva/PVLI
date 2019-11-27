@@ -12,6 +12,8 @@ export default class Game extends Phaser.Scene { //es una escena
   //es llamado cuando esta escne se carga
   init(data){
     this.playerData = data; //la informacion de las armas seleccionadas
+    this.iconoArmaPrincipal = this.add.image(32,608,data.principal).setScale(0.7);
+    this.iconoArmaSecundaria = this.add.image(85,618,data.secundaria).setScale(0.45);
   }
 
   preload() {
@@ -36,7 +38,8 @@ export default class Game extends Phaser.Scene { //es una escena
     this.lifeUI = this.add.text(10, 4, 'Life: 100', { font: '24px Arial', fill: '#ffffff' });
     this.lifeUI.setDepth(10);
     
-    this.player.setArmas(this.playerData.principal, this.playerData.secundaria);    
+    this.player.setArmas(this.playerData.principal, this.playerData.secundaria);
+    this.player.canon = this.barrel;
 
     let map = this.make.tilemap({
       key: 'tilemap',
@@ -58,10 +61,8 @@ export default class Game extends Phaser.Scene { //es una escena
     this.poolBalasRebotador = new PoolBalas(this, paredes,this.player, 'bala1', 10, 'rebotador', 500, 100, 5, 1000, 17);
   }//inicializa todo                     //scena,paredes,     player ,  sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño, rango
 
-
   update() {
   }
-
   
 
   setRangeMortero = function (rango) {
@@ -84,5 +85,10 @@ export default class Game extends Phaser.Scene { //es una escena
 
   explosion(x,y){
     new ExplosionAnim(this,x,y,'animacion'); //crea la animacion de la explosion en el lugar dado
+  }
+
+  cambiarIconosArmas(principal, secundaria){    
+    this.iconoArmaPrincipal = this.add.image(32,608,principal).setScale(0.7);
+    this.iconoArmaSecundaria = this.add.image(85,618,secundaria).setScale(0.45);
   }
 }

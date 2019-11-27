@@ -5,20 +5,20 @@ export default class MenuArmas extends Phaser.Scene {
 
     preload() {
         this.load.image('fondoArmas', 'assets/menuArmas.png');
-        this.load.image('iconoSimple' , 'assets/iconoSimple.png');
-        this.load.image('iconoRafagas', 'assets/iconoRafagas.png' );
-        this.load.image('iconoRebotador', 'assets/iconoRebotador.png' );
-        this.load.image('iconoMortero', 'assets/iconoMortero.png' );
+        this.load.image('disparoSimple' , 'assets/iconoSimple.png');
+        this.load.image('rafagas', 'assets/iconoRafagas.png' );
+        this.load.image('rebotador', 'assets/iconoRebotador.png' );
+        this.load.image('mortero', 'assets/iconoMortero.png' );
         this.load.image('iconoSeleccion', 'assets/iconoSeleccionado.png');
     }
 
 
     create(){
         this.fondo = this.add.image(448,320,'fondoArmas'); //fondo provisional
-        this.botonSimple =  this.add.image(325,292, 'iconoSimple').setInteractive();
-        this.botonRafagas =  this.add.image(325,464, 'iconoRafagas').setInteractive();
-        this.botonRebotador =  this.add.image(608,292, 'iconoRebotador').setInteractive();
-        this.botonMortero =  this.add.image(608,464, 'iconoMortero').setInteractive();
+        this.botonSimple =  this.add.image(325,292, 'disparoSimple').setInteractive();
+        this.botonRafagas =  this.add.image(325,464, 'rafagas').setInteractive();
+        this.botonRebotador =  this.add.image(608,292, 'rebotador').setInteractive();
+        this.botonMortero =  this.add.image(608,464, 'mortero').setInteractive();
         this.boton =  this.add.image(470,580, 'botonInicio').setInteractive().setScale(0.5);
         this.seleccionPrincipal = this.add.image(-50,-50,'iconoSeleccion');
         this.seleccionSecundaria = this.add.image(-50,-50,'iconoSeleccion');
