@@ -88,5 +88,6 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
       this.armaSeleccionada = true;
       this.canon.setArma(this.armaPrincipal);
     }
+      this.scena.cambiarIconosArmas();
   }
 }

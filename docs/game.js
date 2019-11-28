@@ -12,8 +12,8 @@ export default class Game extends Phaser.Scene { //es una escena
   //es llamado cuando esta escne se carga
   init(data){
     this.playerData = data; //la informacion de las armas seleccionadas
-    this.iconoArmaPrincipal = this.add.image(32,608,data.principal).setScale(0.7);
-    this.iconoArmaSecundaria = this.add.image(85,618,data.secundaria).setScale(0.45);
+    this.iconoArmaPrincipal = this.add.image(32,608,data.principal).setScale(0.7).setDepth(10);;
+    this.iconoArmaSecundaria = this.add.image(85,618,data.secundaria).setScale(0.45).setDepth(10);;
   }
 
   preload() {
@@ -87,8 +87,9 @@ export default class Game extends Phaser.Scene { //es una escena
     new ExplosionAnim(this,x,y,'animacion'); //crea la animacion de la explosion en el lugar dado
   }
 
-  cambiarIconosArmas(principal, secundaria){    
-    this.iconoArmaPrincipal = this.add.image(32,608,principal).setScale(0.7);
-    this.iconoArmaSecundaria = this.add.image(85,618,secundaria).setScale(0.45);
+  cambiarIconosArmas(){   
+    let textureP = this.iconoArmaPrincipal.texture; //guarda la texturas para luego invertirlas
+    this.iconoArmaPrincipal.setTexture(this.iconoArmaSecundaria.texture.key);
+    this.iconoArmaSecundaria.setTexture(textureP.key);
   }
 }
