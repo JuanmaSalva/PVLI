@@ -1,6 +1,6 @@
 const app = require('express')();
-const http = require('htpp').createServer(app);
-const io = require('socket.io)')(http);
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 const PORT = 3000;
 var CLIENTS = [];
@@ -17,7 +17,6 @@ io.on('connection', socket => {
         console.log('a user disconnected');
         clients.splice(clients.indexOf(socket), 1); // lo sacamos del array
     });
-
 
     socket.on('precios', mensaje => {
         let lista =
