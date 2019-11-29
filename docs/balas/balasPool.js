@@ -33,12 +33,7 @@ export default class Pool extends Phaser.GameObjects.Container {
 
         this.arma = arma;
         this.cadencia = cad; //se pone aqui por que todas las balas tienen la misma cadencia y no lo necesitan internamente
-        this.cooldownCad = cad; //para la ui
-        this.isShootable = false;
-        this.recharging = true; //empiezan del reves por q si no cuendo cambias de escene dispara ya de una
-        this.scena.time.addEvent({ delay: 100, callback: toggleShoot, callbackScope: this });
-
-
+        this.scena.time.addEvent({ delay: 100, callback: this.scena.toggleShoot, callbackScope: this.scena });
 
         this._group = scene.add.group();
         this._group.addMultiple(entities); //se añaden todas las balas
@@ -49,8 +44,6 @@ export default class Pool extends Phaser.GameObjects.Container {
 
         this.scene.add.existing(this); //le dice a la scene Game que existe
     }
-
-
 }
 
 Pool.prototype.spawn = function (x, y) {
@@ -71,7 +64,7 @@ Pool.prototype.rafaga = function (){
 }
 
 Pool.prototype.shoot = function (x, y) {
-    if (this.isShootable && !this.recharging) {
+    if (this.scena.isShootable && !this.scena.recharging) {
         this.spawn(x, y); //dispara
 
         if(this.arma === "rafagas"){ //si el arma selecionada en rafagas hay un delay de 100 entre cada bala
@@ -79,12 +72,12 @@ Pool.prototype.shoot = function (x, y) {
             this.scena.time.delayedCall(200,this.rafaga,[],this)
         }
 
-        this.isShootable = false; //no puede dispara
+        this.scena.isShootable = false; //no puede dispara
 
-        if (!this.recharging) {
-            this.recharging = true;
+        if (!this.scena.recharging) {
+            this.scena.recharging = true;
             console.log(this.cadencia);
-            this.scena.time.addEvent({ delay: this.cadencia, callback: toggleShoot, callbackScope: this }) //llama al evento toggle pasado el tiempo de cadencia
+            this.scena.time.addEvent({ delay: this.cadencia, callback: this.scena.toggleShoot, callbackScope: this.scena }) //llama al evento toggle pasado el tiempo de cadencia
             this.scena.triggerRechargeUI(this.cadencia);
         }
     }
@@ -107,10 +100,4 @@ Pool.prototype.delete = function (bala) {
 
         i++;
     }
-}
-
-function toggleShoot() {
-    this.isShootable = true;
-    this.recharging = false;
-    this.scena.triggerRechargeOkay();
 }

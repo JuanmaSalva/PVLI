@@ -32,7 +32,13 @@ export default class Game extends Phaser.Scene { //es una escena
     this.lifeBar = this.add.image(8, 7, 'barraVida').setOrigin(0, 0).setDepth(9);
 
     this.shootContainer = this.add.image(31, 35, 'containerVida').setOrigin(0, 0).setDepth(10).setAngle(90).setTint((0x85f9ff));
+    this.shootContainer.displayWidth = 250;
     this.shootBar = this.add.image(25, 41, 'barraVida').setOrigin(0, 0).setDepth(9).setAngle(90).setTint(0x26ff00);
+    this.shootBar.displayWidth = 240;
+    this.speedRecharge = 0;
+
+    this.isShootable = false;
+    this.recharging = true; //empiezan del reves por q si no cuendo cambias de escene dispara ya de una
 
     let map = this.make.tilemap({
       key: 'tilemap',
@@ -56,7 +62,7 @@ export default class Game extends Phaser.Scene { //es una escena
   update() {
 
     if (this.shootContainer.displayWidth > this.shootBar.displayWidth + 10) {
-      this.shootBar.displayWidth += 4;
+      this.shootBar.displayWidth += this.speedRecharge;
     }
 
   }
@@ -76,21 +82,16 @@ export default class Game extends Phaser.Scene { //es una escena
 
   //se llama al disparar y resetea la barra de recarga
   triggerRechargeUI = function (time) {
-    this.shootContainer.displayWidth = time / 4;
     this.shootBar.displayWidth = 0;
+    this.speedRecharge = 3900 / time;
     this.shootBar.setTint(0x707070);
   }
 
-  //actualiza la barra al cambiar de arma
-  triggerChangeUI = function (time) {
-    this.shootContainer.displayWidth = time / 4;
-    this.shootBar.displayWidth = time / 4 - 10;
-  }
 
-  //cambia el color de la barra cuando esta lista el arma
-  triggerRechargeOkay = function () {
+  toggleShoot = function () {
+    this.isShootable = true;
+    this.recharging = false;
     this.shootBar.setTint(0x26ff00);
+
   }
-
-
 }

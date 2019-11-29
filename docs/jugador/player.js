@@ -67,15 +67,12 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
 
     if (this.b.isDown) {
       this.arma = this.armas[0];
-      this.scena.triggerChangeUI(700);
     }//PROVISIONAL
     else if (this.n.isDown) {
       this.arma = this.armas[1];
-      this.scena.triggerChangeUI(1000);
     }//PROVISIONAL
     else if (this.m.isDown) {
       this.arma = this.armas[2];
-      this.scena.triggerChangeUI(2000);
     }   //PROVISIONAL
 
     if (this.u.isDown) this.dealDmg(-1);//PROVISIONAL
