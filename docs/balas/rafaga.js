@@ -5,6 +5,7 @@ export default class BalaRafaga extends Bullet {
         this.velocidad = vel; //pone la velocidad del padre
         this.rebotesAcumulados = 0;
         this.daño = damage;
+        this.body.setCircle(2, 0, 3);
 
         scene.physics.add.collider(paredes, this, function () {
             pool.delete(this); //destruirse           
