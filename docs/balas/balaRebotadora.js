@@ -26,7 +26,7 @@ export default class BalaRebotadora extends Bullet {
                 this.body.setVelocityY(this.direccion[1] * this.velocidad);
             }
             else {
-                pool.delete(this); //destruirse
+                pool.delete(this,false); //destruirse
                 this.velocidad = vel;
                 this.rebotesAcumulados = 0;
             }

@@ -15,7 +15,7 @@ export default class BalaSimple extends Bullet {
                 this.rotation = angle;  //pone la bala apuntando al raton
             }
             else {
-                pool.delete(this); //destruirse
+                pool.delete(this,false); //destruirse
                 this.rebotesAcumulados = 0;
             }
         }, null, this); //añade las colisiones con los muros
