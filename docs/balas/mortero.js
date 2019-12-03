@@ -39,10 +39,8 @@ export default class BalaMortero extends Phaser.GameObjects.Sprite {
                     this.velocidad = this.velocidadIni;
                     this.scala=this.escalaInicial;
 
-
                     this.scene.explosion(this.x, this.y);
                     this.pool.delete(this, true); //destruirse
-
                     
                 }
             }
