@@ -14,7 +14,8 @@
     <h1>Juego con Phaser</h1>
     <script type="module">
         import Game from './game.js';
-        import Menu from './menu.js';
+        import Menu from './menus/menu.js';
+        import MenuArmas from './menus/menuArmas.js';
 
         var config = {
             type: Phaser.AUTO,
@@ -28,10 +29,11 @@
                // mode: Phaser.Scale.FIT
                autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
             },
-            scene: [Menu, Game],
+            scene: [Menu, Game,MenuArmas],
             physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
+            
         };
-        new Phaser.Game(config);
+        new Phaser.Game(config);        
     </script>
 </body>
 

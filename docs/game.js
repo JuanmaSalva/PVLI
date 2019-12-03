@@ -8,6 +8,14 @@ export default class Game extends Phaser.Scene { //es una escena
   constructor() {
     super({ key: 'main' });
   }
+
+  //es llamado cuando esta escne se carga
+  init(data){
+    this.playerData = data; //la informacion de las armas seleccionadas
+    this.iconoArmaPrincipal = this.add.image(32,608,data.principal).setScale(0.7).setDepth(10);;
+    this.iconoArmaSecundaria = this.add.image(85,618,data.secundaria).setScale(0.45).setDepth(10);;
+  }
+
   preload() {
     this.load.image('tank', 'assets/redTank.png');
     this.load.image('redBarrel1', 'assets/redBarrel.png');
@@ -19,7 +27,6 @@ export default class Game extends Phaser.Scene { //es una escena
   } //cargar los recursos
 
   create() {
-
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
 
     this.player = new Player(this, 100, 100); //crea un container Player
@@ -27,9 +34,12 @@ export default class Game extends Phaser.Scene { //es una escena
     this.barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0); //se crea el cañon
     
     this.player.add(tank);
-    this.player.add(this.barrel); //se les añade al container player    
+    this.player.add(this.barrel); //se les añade al container player
     this.lifeUI = this.add.text(10, 4, 'Life: 100', { font: '24px Arial', fill: '#ffffff' });
     this.lifeUI.setDepth(10);
+    
+    this.player.setArmas(this.playerData.principal, this.playerData.secundaria);
+    this.player.canon = this.barrel;
 
     let map = this.make.tilemap({
       key: 'tilemap',
@@ -51,10 +61,8 @@ export default class Game extends Phaser.Scene { //es una escena
     this.poolBalasRebotador = new PoolBalas(this, paredes,this.player, 'bala1', 10, 'rebotador', 500, 100, 5, 1000, 17);
   }//inicializa todo                     //scena,paredes,     player ,  sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño, rango
 
-
   update() {
   }
-
   
 
   setRangeMortero = function (rango) {
@@ -77,5 +85,11 @@ export default class Game extends Phaser.Scene { //es una escena
 
   explosion(x,y){
     new ExplosionAnim(this,x,y,'animacion'); //crea la animacion de la explosion en el lugar dado
+  }
+
+  cambiarIconosArmas(){   
+    let textureP = this.iconoArmaPrincipal.texture; //guarda la texturas para luego invertirlas
+    this.iconoArmaPrincipal.setTexture(this.iconoArmaSecundaria.texture.key);
+    this.iconoArmaSecundaria.setTexture(textureP.key);
   }
 }
