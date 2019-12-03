@@ -3,6 +3,7 @@ import Canon from './jugador/canon.js'
 import Tank from './jugador/tank.js'
 import PoolBalas from './balas/balasPool.js'
 import ExplosionAnim from './balas/explosion.js'
+import * as _c from './constantes.js'
 
 export default class Game extends Phaser.Scene { //es una escena
   constructor() {
@@ -24,6 +25,8 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('bala1', 'assets/bala1.png');
     this.load.image('balaMortero' ,'assets/balaMortero.png')
     this.load.spritesheet('animacion', 'assets/explosion.png',{frameWidth:64,frameHeight:64});
+    this.load.image('barraVida', 'assets/BarraVida.png');
+    this.load.image('containerVida', 'assets/ContainerVida.png');
   } //cargar los recursos
 
   create() {
@@ -35,9 +38,22 @@ export default class Game extends Phaser.Scene { //es una escena
     
     this.player.add(tank);
     this.player.add(this.barrel); //se les añade al container player
-    this.lifeUI = this.add.text(10, 4, 'Life: 100', { font: '24px Arial', fill: '#ffffff' });
-    this.lifeUI.setDepth(10);
     
+    this.lifeContainer = this.add.image(_c.settBarraVida.posicionContainer.x, _c.settBarraVida.posicionContainer.y, 'containerVida').setOrigin(0, 0).setDepth(10);
+    this.lifeContainer.displayWidth = _c.settBarraVida.widthContainer;
+    this.lifeBar = this.add.image(_c.settBarraVida.posicionBarra.x, _c.settBarraVida.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9);
+    this.lifeBar.displayWidth = _c.settBarraVida.widthContainer;
+
+    this.shootContainer = this.add.image(_c.settBarraRech.posicionContainer.x, _c.settBarraRech.posicionContainer.y, 'containerVida').setOrigin(0, 0);
+    this.shootContainer.setDepth(10).setAngle(90).setTint(_c.settBarraRech.colorContainer);
+    this.shootContainer.displayWidth = _c.settBarraRech.widthContainer;
+    this.shootBar = this.add.image(_c.settBarraRech.posicionBarra.x, _c.settBarraRech.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9).setAngle(90).setTint(0x26ff00);
+    this.shootBar.displayWidth = _c.settBarraRech.widthContainer-11;
+    this.speedRecharge = 0;
+    
+    this.isShootable = false;
+    this.recharging = true; //empiezan del reves por q si no cuendo cambias de escene dispara ya de una
+
     this.player.setArmas(this.playerData.principal, this.playerData.secundaria);
     this.player.canon = this.barrel;
 
@@ -62,6 +78,9 @@ export default class Game extends Phaser.Scene { //es una escena
   }//inicializa todo                     //scena,paredes,     player ,  sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño, rango
 
   update() {
+    if (this.shootContainer.displayWidth > this.shootBar.displayWidth + 11) {
+      this.shootBar.displayWidth += this.speedRecharge;
+    }
   }
   
 
@@ -91,5 +110,21 @@ export default class Game extends Phaser.Scene { //es una escena
     let textureP = this.iconoArmaPrincipal.texture; //guarda la texturas para luego invertirlas
     this.iconoArmaPrincipal.setTexture(this.iconoArmaSecundaria.texture.key);
     this.iconoArmaSecundaria.setTexture(textureP.key);
+  }
+
+  
+  //se llama al disparar y resetea la barra de recarga
+  triggerRechargeUI = function (time) {
+    console.log(time);
+    this.shootBar.displayWidth = 0;
+    this.speedRecharge = _c.settBarraRech.velocidadUIRecarga / time;
+    this.shootBar.setTint(_c.settBarraRech.colorBarraCharged);
+  }
+
+
+  toggleShoot = function () {
+    this.isShootable = true;
+    this.recharging = false;
+    this.shootBar.setTint(_c.settBarraRech.colorBarraNormal);
   }
 }

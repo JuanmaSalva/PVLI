@@ -65,8 +65,8 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     if (this.u.isDown) this.dealDmg(-10);//PROVISIONAL
     else if (this.j.isDown) this.dealDmg(10);//PROVISIONAL
     else if (this.k.isDown) this.revive();//PROVISIONAL   
-
-    this.scena.lifeUI.setText('Life: ' + this.life); //actualiza la ui
+    
+    this.scena.lifeBar.displayWidth = this.life*1.6;
   }
 
   spawnBala = function (arma) {
