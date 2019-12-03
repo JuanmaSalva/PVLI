@@ -5,7 +5,6 @@ export default class BalaSimple extends Bullet {
         this.velocidad = vel; //pone la velocidad del padre
         this.rebotesAcumulados = 0;
         this.daño = damage;
-        this.body.setCircle(2, 0, 3);
 
         scene.physics.add.collider(paredes, this, function () {
 
@@ -15,7 +14,7 @@ export default class BalaSimple extends Bullet {
                 this.rotation = angle;  //pone la bala apuntando al raton
             }
             else {
-                pool.delete(this); //destruirse
+                pool.delete(this,false); //destruirse
                 this.rebotesAcumulados = 0;
             }
         }, null, this); //añade las colisiones con los muros

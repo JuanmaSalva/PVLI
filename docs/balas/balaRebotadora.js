@@ -5,7 +5,6 @@ export default class BalaRebotadora extends Bullet {
         this.velocidad = vel; //pone la velocidad del padre
         this.rebotesAcumulados = 0;
         this.daño = damage;
-        this.body.setCircle(2, 0, 3);
 
         scene.physics.add.collider(paredes, this, function () {
 
@@ -26,7 +25,7 @@ export default class BalaRebotadora extends Bullet {
                 this.body.setVelocityY(this.direccion[1] * this.velocidad);
             }
             else {
-                pool.delete(this); //destruirse
+                pool.delete(this,false); //destruirse
                 this.velocidad = vel;
                 this.rebotesAcumulados = 0;
             }
