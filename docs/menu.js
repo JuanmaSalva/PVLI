@@ -1,6 +1,7 @@
 export default class Menu extends Phaser.Scene {
     constructor() {
         super({ key: 'menu' });
+
     }
 
     preload() {
@@ -12,7 +13,7 @@ export default class Menu extends Phaser.Scene {
         this.fondo = this.add.image(448,320,'fondoInicio'); //fondo provisional
         this.boton =  this.add.image(448,268, 'botonInicio').setInteractive().setScale(0.5);
         this.boton.on('pointerdown', pointer =>{
-            this.scene.start('menuArmas'); //main = el key de la escena Game
+            this.scene.start('main'); //main = el key de la escena Game
         })
     }
 

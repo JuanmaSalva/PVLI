@@ -14,10 +14,6 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this._maxLife = _c.settPlayer.vidaMax;
     this.life = this._maxLife;
 
-    this.armaPrincipal;
-    this.armaSecundaria;
-    this.armaSeleccionada = true;//true=principal, false=secundaria
-
     this.u = scene.input.keyboard.addKey('U'); //teclas provisionales para la vida en ui
     this.j = scene.input.keyboard.addKey('J');
     this.k = scene.input.keyboard.addKey('K');
@@ -26,9 +22,16 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.a = scene.input.keyboard.addKey('A');
     this.s = scene.input.keyboard.addKey('S');
     this.d = scene.input.keyboard.addKey('D');
-    this.q = scene.input.keyboard.addKey('Q');
+
+    this.b = scene.input.keyboard.addKey('B'); //teclas provisionales para el cambio de arma
+    this.n = scene.input.keyboard.addKey('N');
+    this.m = scene.input.keyboard.addKey('M');
 
 
+    this.armas = ['disparoSimple', 'rafagas', 'rebotador'];
+    this.arma = this.armas[0]; //indica que arma tiene seleccionada
+
+    
     this.dealDmg = function (damage) { //metodo en el que recibes daño
       this.life -= damage;
 
@@ -39,16 +42,17 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
         console.log('Murio wey');
       }else this.life = this._maxLife;
     }
+
     this.revive = function () { //se revive al juegador
       this.life = this._maxLife;
       console.log('1up');
-    }
+    } 
 
-    let q = scene.input.keyboard.addKey('Q');  //boton de cambio de arma
-    q.on('down', this.cambioArma, this);
   }
 
   preUpdate() {
+
+
     if ((this.cursors.up.isDown || this.cursors.down.isDown || this.s.isDown || this.w.isDown) && (this.cursors.left.isDown || this.cursors.right.isDown || this.s.isDown || this.w.isDown)) this.speed = this._maxSpeed * 71 / 100;
     else this.speed = this._maxSpeed;
     if (this.cursors.up.isDown || this.w.isDown) {
@@ -81,25 +85,8 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.scena.lifeBar.displayWidth = this.life*1.6;
   }
 
-  spawnBala = function (arma) {
-    this.scena.spawnBala(this.x, this.y, arma);
+  spawnBala = function () {
+    this.scena.spawnBala(this.x, this.y, this.arma);
   }
 
-  setArmas(p, s) {
-    this.armaPrincipal = p;
-    this.armaSecundaria = s;
-    this.canon.setArma(this.armaPrincipal); //siempre empieza con el arma principal
-  }
-
-  cambioArma() {
-    if (this.armaSeleccionada) { //cambia de arma segun la que tiene seleccionada el jugador
-      this.armaSeleccionada = false;
-      this.canon.setArma(this.armaSecundaria);
-    }
-    else {
-      this.armaSeleccionada = true;
-      this.canon.setArma(this.armaPrincipal);
-    }
-      this.scena.cambiarIconosArmas();
-  }
 }
