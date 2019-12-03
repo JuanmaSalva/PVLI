@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="favicon.png" type="image/png" />
     <meta name="viewport" content="width=device-width, initial-scale=2.0">
-    <link rel="stylesheet" href="game.css">
-    <script src="phaser.min.js"></script>
-
+    <link rel="stylesheet" href="./game.css">
+    <script src="./phaser.min.js"></script>
     <title>¡Juego con Phaser!</title>
+
+   
 </head>
 
 <body>
     <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        const direccion =  'localhost';     //TIENE QUE SER LA IP DEL SERVIDOR
+        const puerto = 3000;
+        const socket = io('http://' + direccion + ':' + puerto);
+    </script>
+
+    <script>
+        /*socket.on('respuesta', lista => {
+            // `JSON.stringify` convierte un JSON a string para
+            // poder mostrarlo
+            muestra.innerHTML = JSON.stringify(lista)
+
+            console.log("Funciona, no parece eh");
+        });*/
+
+    </script>
+
+
     <h1>Juego con Phaser</h1>
     <script type="module">
         import Game from './game.js';
@@ -26,8 +46,7 @@
                 gamepad: true
             },
             scale: {
-                mode: Phaser.Scale.FIT, //SI QUIAMOS ESTO SE VE ENTERO SIN TENER QUE BAJAR PERO ES BASTANTE MAS PEQUEÑO
-                autoCenter: Phaser.Scale.CENTER_BOTH
+                autoCenter: Phaser.Scale.CENTER
             },
             scene: [Menu, Game],
             physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
