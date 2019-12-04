@@ -28,7 +28,6 @@ export default class Pool extends Phaser.GameObjects.Container {
         this.arma = arma;
         this.cadencia = cad; //se pone aqui por que todas las balas tienen la misma cadencia y no lo necesitan internamente
         this.rango = rango;
-        this.scena.time.addEvent({ delay: _c.settBalasGeneral.delayInicialLimpiaRecharge, callback: this.scena.toggleShoot, callbackScope: this.scena });
 
         this._group = scene.add.group();
         this._group.addMultiple(entities); //se añaden todas las balas

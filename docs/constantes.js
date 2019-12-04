@@ -42,9 +42,7 @@ export const settBarraRech = {
 //-----------
 
 export const settBalasGeneral = {
-    delayInicialLimpiaRecharge: 100,    //delay en ms para que no dispara al pasar de una escena a otra dando click
     posicionBalasDesactivadas: { x: 50, y: 50 },
-
 }
 
 export const settBSimples = {
@@ -86,11 +84,11 @@ export const settBMortero = {
     rango: 250,
 
     velocidadCrecimientoEscala: 0.1,
-    velocidadDerecimientoEscala_: 0.15,
+    velocidadDerecimientoEscala_: 0.1,
 
     velocidadAnimacion: 15, //en framerate
 
     anchoCirculoRango: 2, //pixeles
     colorCirculoRango: 0xff0000,
-    variabilidadRadioCirculo : -30, //pixeles
+    variabilidadRadioCirculo : 0, //pixeles
 }
