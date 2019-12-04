@@ -1,3 +1,5 @@
+import * as _c from '../constantes.js'
+
 export default class ExplosionAnim extends Phaser.GameObjects.Sprite { //es un gameobject
     constructor(scene, x, y,imag) { //imag es el sprite que se va a cargar
         super(scene, x, y, imag); //llama al constructor de la clase por encima
@@ -5,7 +7,7 @@ export default class ExplosionAnim extends Phaser.GameObjects.Sprite { //es un g
         scene.anims.create({
             key: 'explo',
             frames: scene.anims.generateFrameNumbers(imag, { start: 0, end: 9}),
-            frameRate: 15,
+            frameRate: _c.settBMortero.velocidadAnimacion,
             repeat: 0,
         });
         
