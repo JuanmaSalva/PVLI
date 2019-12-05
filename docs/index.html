@@ -15,14 +15,23 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
-        const direccion =  ' 147.96.119.95';     //TIENE QUE SER LA IP DEL SERVIDOR
+        const direccion =  'localhost';     //TIENE QUE SER LA IP DEL SERVIDOR
         const puerto = 3000;
         const socket = io('http://' + direccion + ':' + puerto);
     </script>
 
     <script>
+        socket.emit('numeroJugador', '0');
     </script>
 
+    <script>
+        socket.on('numeroJugador'), num => {          
+            console.log("llego");  
+            /*let n;
+            n = JSON.stringify(num);
+            console.log("numero de jugador: " + n);*/
+        }    
+    </script>
 
     <h1>Juego con Phaser</h1>
     <script type="module">
@@ -48,6 +57,9 @@
         };
         new Phaser.Game(config);        
     </script>
+
+
+
 </body>
 
 </html>
