@@ -1,3 +1,5 @@
+import * as _c from '../constantes.js'
+
 export default class Canon extends Phaser.GameObjects.Sprite { //es un gameobject
     constructor(scene, imag, parent) { //imag es el sprite que se va a cargar
         super(scene, 0, -1, imag); //llama al constructor de la clase por encima
@@ -27,8 +29,8 @@ export default class Canon extends Phaser.GameObjects.Sprite { //es un gameobjec
         this.rotation = angle;
         if (this.pointer.isDown && this.arma == 'mortero') {
             if (this.circulo) this.circulo.destroy();
-            this.circulo = this.scene.add.circle(this.parent.x, this.parent.y, this.rango);
-            this.circulo.setStrokeStyle(2, 0xff0000);
+            this.circulo = this.scene.add.circle(this.parent.x, this.parent.y, this.rango + _c.settBMortero.variabilidadRadioCirculo);
+            this.circulo.setStrokeStyle(_c.settBMortero.anchoCirculoRango, _c.settBMortero.colorCirculoRango);
         }
     }
 

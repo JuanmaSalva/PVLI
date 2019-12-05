@@ -7,7 +7,6 @@ export const settPlayer = {
     posicionInicial: { x: 100, y: 100 },
     velocidadMax: 100,
     vidaMax: 100,
-
 };
 
 
@@ -21,11 +20,13 @@ export const settBarraVida = {
     posicionContainer: { x: 1, y: 1 },
     widthContainer: 170,
     posicionBarra: { x: 8, y: 7 },
+    escalaBarraA_Vida: 1.6,
 };
 
 export const settBarraRech = {
     posicionContainer: { x: 31, y: 35 },
     widthContainer: 250,
+    margenWidth: 11,
     colorContainer: 0x85f9ff,
     posicionBarra: { x: 25, y: 41 },
     colorBarraNormal: 0x26ff00,
@@ -40,11 +41,15 @@ export const settBarraRech = {
 //---BALAS---
 //-----------
 
+export const settBalasGeneral = {
+    posicionBalasDesactivadas: { x: 50, y: 50 },
+}
+
 export const settBSimples = {
     cantidadPool: 10,
     velocidad: 500,
     aceleracion: 0,
-    rebotes: 100,
+    rebotes: 1,
     cadencia: 700,
     daño: 20,
 }
@@ -56,6 +61,8 @@ export const settBRaf = {
     rebotes: 0,
     cadencia: 1000,
     daño: 13,
+
+    tiempoEntreBalas: 100, //en ms
 }
 
 export const settBRebot = {
@@ -69,9 +76,19 @@ export const settBRebot = {
 
 export const settBMortero = {
     cantidadPool: 10,
-    velocidad: 500,
+    velocidad: 1200,    //tiempo que esta en el aire
     aceleracion: 0,
     rebotes: 1,
-    cadencia: 700,
+    cadencia: 1800,
     daño: 20,
+    rango: 250,
+
+    velocidadCrecimientoEscala: 0.1,
+    velocidadDerecimientoEscala_: 0.1,
+
+    velocidadAnimacion: 15, //en framerate
+
+    anchoCirculoRango: 2, //pixeles
+    colorCirculoRango: 0xff0000,
+    variabilidadRadioCirculo : 0, //pixeles
 }

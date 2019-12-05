@@ -3,6 +3,7 @@ import BulletSimple from './balaSimple.js'
 import BulletRafaga from './rafaga.js'
 import BulletRebotador from './balaRebotadora.js'
 import BulletMortero from './mortero.js'
+import * as _c from '../constantes.js'
 
 export default class Pool extends Phaser.GameObjects.Container {
     constructor(scene, paredes,player,imag, numElementosPool, arma, velocidad, aceleracion, numrebotes, cad, daño, rango) {
@@ -17,7 +18,8 @@ export default class Pool extends Phaser.GameObjects.Container {
             else if (arma === 'rebotador') entities.push(new BulletRebotador(scene, imag, velocidad, numrebotes, paredes, this, aceleracion, daño)); //creacion de las balas
             else if (arma === 'mortero') entities.push(new BulletMortero(scene, imag, velocidad, this, daño, rango)); //creacion de las balas
 
-            entities[i].x = entities[i].y = 50;
+            entities[i].x = _c.settBalasGeneral.posicionBalasDesactivadas.x;
+            entities[i].y = _c.settBalasGeneral.posicionBalasDesactivadas.x.y;
             entities[i].body.velocity.x = entities[i].body.velocity.y = 0;
             if(arma === 'mortero') entities[i].setDepth(1);
             else entities[i].setDepth(-1);
@@ -26,7 +28,6 @@ export default class Pool extends Phaser.GameObjects.Container {
         this.arma = arma;
         this.cadencia = cad; //se pone aqui por que todas las balas tienen la misma cadencia y no lo necesitan internamente
         this.rango = rango;
-        this.scena.time.addEvent({ delay: 100, callback: this.scena.toggleShoot, callbackScope: this.scena });
 
         this._group = scene.add.group();
         this._group.addMultiple(entities); //se añaden todas las balas
@@ -54,7 +55,7 @@ export default class Pool extends Phaser.GameObjects.Container {
 
     rafaga = function () {
         let pos = this.scena.canonPosition();
-        this.spawn(pos[0], pos[1]); //dispara
+        this.spawn(pos.x, pos.y); //dispara
     }
     
     shoot = function (x, y) {
@@ -62,8 +63,8 @@ export default class Pool extends Phaser.GameObjects.Container {
             this.spawn(x, y); //dispara
     
             if (this.arma == "rafagas") { //si el arma selecionada en rafagas hay un delay de 100 entre cada bala
-                this.scena.time.delayedCall(100, this.rafaga, [], this)
-                this.scena.time.delayedCall(200, this.rafaga, [], this)
+                this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.rafaga, [], this)
+                this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.rafaga, [], this)
             }
     
             this.scena.isShootable = false; //no puede dispara
