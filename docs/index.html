@@ -8,29 +8,26 @@
     <script src="./phaser.min.js"></script>
     <title>¡Juego con Phaser!</title>
 
-   
+
 </head>
 
 <body>
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
-        const direccion =  'localhost';     //TIENE QUE SER LA IP DEL SERVIDOR
+        const direccion = 'localhost';     //TIENE QUE SER LA IP DEL SERVIDOR
         const puerto = 3000;
         const socket = io('http://' + direccion + ':' + puerto);
     </script>
 
     <script>
-        socket.emit('numeroJugador', '0');
+        socket.emit('numeroJugador', '0'); //funciona
     </script>
 
     <script>
-        socket.on('numeroJugador'), num => {          
-            console.log("llego");  
-            /*let n;
-            n = JSON.stringify(num);
-            console.log("numero de jugador: " + n);*/
-        }    
+        socket.on('numeroJugador', num => {
+            this.numPlayer = num.numero;
+        }); 
     </script>
 
     <h1>Juego con Phaser</h1>
@@ -47,15 +44,15 @@
             input: {
                 gamepad: true
             },
-            scale: {                
-               // mode: Phaser.Scale.FIT
-               autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+            scale: {
+                // mode: Phaser.Scale.FIT
+                autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
             },
-            scene: [Menu, Game,MenuArmas],
+            scene: [Menu, Game, MenuArmas],
             physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
-            
+
         };
-        new Phaser.Game(config);        
+        new Phaser.Game(config);  
     </script>
 
 
