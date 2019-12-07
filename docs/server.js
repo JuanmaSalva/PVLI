@@ -27,6 +27,10 @@ app.get('/phaser.min.js', function (req, res) {
   res.sendFile(__dirname + '/phaser.min.js');
 });
 
+app.get('/game2nd.js', function (req, res) {
+  res.sendFile(__dirname + '/game2nd.js');
+});
+
 app.use('/jugador', express.static('jugador'));
 app.use('/balas', express.static('balas'));
 app.use('/assets', express.static('assets'));
@@ -40,19 +44,33 @@ io.on('connection', socket => {
 
 
   clients[0].on('numeroJugador', () => { //simepre existira
-    let n={numero:0};
+    let n = { numero: 0 };
     clients[0].emit('numeroJugador', n);
   });
 
 
-  socket.on('disparo', mensaje =>{
-    console.log("El jugador " + mensaje.player + " ha disparado con " + mensaje.arma);
+  this.jugadoresEsperando = {jugador1:false, jugador2:false}
+
+  socket.on('empezar', numJugador => {
+
+    if(numJugador == 0)this.jugadoresEsperando.jugador1 = true;
+    else this.jugadoresEsperando.jugador2 = true;
+
+    console.log(this.jugadoresEsperando);
+    if(!this.jugadoresEsperando.jugador1 || !this.jugadoresEsperando.jugador2){
+       socket.emit("respuestaJugadoresEsperando", false); //solo tiene que avisar a uno de los dos
+    }
+    else {
+      clients[0].emit("respuestaJugadoresEsperando", true); //solo tiene que avisar a uno de los dos
+      clients[1].emit("respuestaJugadoresEsperando", true); //solo tiene que avisar a uno de los dos
+    } //avisa a los dos aun q de momento esto peta (creo)
+
   })
 
 
-  if(clients[1]){ //cuando se conecta el segundo jugador
+  if (clients[1]) { //cuando se conecta el segundo jugador
     clients[1].on('numeroJugador', () => {
-      let n={numero:1};
+      let n = { numero: 1 };
       clients[1].emit('numeroJugador', n);
     });
   }

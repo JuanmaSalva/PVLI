@@ -84,6 +84,10 @@ export default class Game extends Phaser.Scene { //es una escena
     if (this.shootContainer.displayWidth > this.shootBar.displayWidth + 11) {
       this.shootBar.displayWidth += this.speedRecharge;
     }
+
+
+
+
   }
   
   setRangeMortero = function (rango) {
@@ -92,8 +96,7 @@ export default class Game extends Phaser.Scene { //es una escena
 
   //se ha disparado y segun el arma se llama a la pool adecuada
   spawnBala = function (x, y, arma) {
-    console.log(this.socket);
-    this.socket.emit("disparo", {player:0,arma:arma});
+    //this.socket.emit("disparo", {player:0,arma:arma});
     if (arma == 'disparoSimple') this.poolBalasSimples.shoot(x, y);
     else if (arma == 'rafagas') this.poolBalasRafagas.shoot(x, y);
     else if (arma == 'rebotador') this.poolBalasRebotador.shoot(x, y);
@@ -115,7 +118,6 @@ export default class Game extends Phaser.Scene { //es una escena
     this.iconoArmaPrincipal.setTexture(this.iconoArmaSecundaria.texture.key);
     this.iconoArmaSecundaria.setTexture(textureP.key);
   }
-
   
   //se llama al disparar y resetea la barra de recarga
   triggerRechargeUI = function (time) {
@@ -124,7 +126,6 @@ export default class Game extends Phaser.Scene { //es una escena
     this.speedRecharge = _c.settBarraRech.velocidadUIRecarga / time;
     this.shootBar.setTint(_c.settBarraRech.colorBarraCharged);
   }
-
 
   toggleShoot = function () {
     this.isShootable = true;
