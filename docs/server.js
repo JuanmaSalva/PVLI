@@ -37,10 +37,17 @@ io.on('connection', socket => {
   console.log('a user connected');
   clients.push(socket);
 
-  clients[0].on('numeroJugador', mensaje => {
+  clients[0].on('numeroJugador', () => { //simepre existira
     let n={numero:0};
     clients[0].emit('numeroJugador', n);
   });
+
+  if(clients[1]){ //cuando se conecta el segundo jugador
+    clients[1].on('numeroJugador', () => {
+      let n={numero:1};
+      clients[1].emit('numeroJugador', n);
+    });
+  }
 
   socket.on('disconnect', () => {
     console.log('a user disconnected');

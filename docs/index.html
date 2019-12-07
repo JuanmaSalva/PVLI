@@ -21,12 +21,13 @@
     </script>
 
     <script>
-        socket.emit('numeroJugador', '0'); //funciona
+        socket.emit('numeroJugador'); //manda
     </script>
 
     <script>
-        socket.on('numeroJugador', num => {
-            this.numPlayer = num.numero;
+        socket.on('numeroJugador', num => { //recibe
+            numPlayer = num.numero;
+            console.log("jugador: " + numPlayer);
         }); 
     </script>
 
