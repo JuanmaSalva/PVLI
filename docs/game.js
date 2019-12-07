@@ -5,9 +5,11 @@ import PoolBalas from './balas/balasPool.js'
 import ExplosionAnim from './balas/explosion.js'
 import * as _c from './constantes.js'
 
+
 export default class Game extends Phaser.Scene { //es una escena
   constructor() {
     super({ key: 'main' });
+
   }
 
   //es llamado cuando esta escne se carga
@@ -15,6 +17,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.playerData = data; //la informacion de las armas seleccionadas
     this.iconoArmaPrincipal = this.add.image(32,608,data.principal).setScale(0.7).setDepth(10);;
     this.iconoArmaSecundaria = this.add.image(85,618,data.secundaria).setScale(0.45).setDepth(10);;
+    this.socket = data.soc;
   }
 
   preload() {
@@ -83,13 +86,14 @@ export default class Game extends Phaser.Scene { //es una escena
     }
   }
   
-
   setRangeMortero = function (rango) {
     this.barrel.setRange(rango);
   }
 
   //se ha disparado y segun el arma se llama a la pool adecuada
   spawnBala = function (x, y, arma) {
+    console.log(this.socket);
+    this.socket.emit("disparo", {player:0,arma:arma});
     if (arma == 'disparoSimple') this.poolBalasSimples.shoot(x, y);
     else if (arma == 'rafagas') this.poolBalasRafagas.shoot(x, y);
     else if (arma == 'rebotador') this.poolBalasRebotador.shoot(x, y);

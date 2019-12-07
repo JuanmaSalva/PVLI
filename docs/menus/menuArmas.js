@@ -3,6 +3,10 @@ export default class MenuArmas extends Phaser.Scene {
         super({ key: 'menuArmas' });
     }
 
+    init(socket){
+        this.socket=socket;
+    }
+
     preload() {
         this.load.image('fondoArmas', 'assets/menuArmas.png');
         this.load.image('disparoSimple' , 'assets/iconoSimple.png');
@@ -52,7 +56,7 @@ export default class MenuArmas extends Phaser.Scene {
 
         
         this.boton.on('pointerdown', pointer =>{
-            if(armaPrincipalSeleccionada != "" && armaSecundariaSeleccionada != "") this.scene.start('main',{principal:armaPrincipalSeleccionada,secundaria:armaSecundariaSeleccionada}); //main = el key de la escena Game
+            if(armaPrincipalSeleccionada != "" && armaSecundariaSeleccionada != "") this.scene.start('main',{principal:armaPrincipalSeleccionada,secundaria:armaSecundariaSeleccionada, soc:this.socket}); //main = el key de la escena Game
         })
     }
 

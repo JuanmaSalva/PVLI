@@ -44,7 +44,6 @@
         const video = document.getElementById('video');
 
         if (numPlayer == 0) {
-
             var config = {
                 type: Phaser.AUTO,
                 width: 896,
@@ -59,16 +58,13 @@
                 },
                 scene: [Menu, Game, MenuArmas],
                 physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
-
             };
-            new Phaser.Game(config);
-            console.log('0');
-
-
-        } else {
-
+            let game = new Phaser.Game(config);
+            game.scene.start('menu', socket);
+            
+        } 
+        else {
             video.innerHTML = "Habemus video";
-
         }
 
     </script>

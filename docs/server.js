@@ -37,10 +37,18 @@ io.on('connection', socket => {
   console.log('a user connected');
   clients.push(socket);
 
+
+
   clients[0].on('numeroJugador', () => { //simepre existira
     let n={numero:0};
     clients[0].emit('numeroJugador', n);
   });
+
+
+  socket.on('disparo', mensaje =>{
+    console.log("El jugador " + mensaje.player + " ha disparado con " + mensaje.arma);
+  })
+
 
   if(clients[1]){ //cuando se conecta el segundo jugador
     clients[1].on('numeroJugador', () => {
@@ -48,6 +56,13 @@ io.on('connection', socket => {
       clients[1].emit('numeroJugador', n);
     });
   }
+
+
+
+
+
+
+
 
   socket.on('disconnect', () => {
     console.log('a user disconnected');
