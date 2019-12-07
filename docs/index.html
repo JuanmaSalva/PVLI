@@ -25,6 +25,7 @@
     </script>
 
     <script>
+        let numPlayer = 0;
         socket.on('numeroJugador', num => { //recibe
             numPlayer = num.numero;
             console.log("jugador: " + numPlayer);
@@ -32,31 +33,45 @@
     </script>
 
     <h1>Juego con Phaser</h1>
+
+    <p id="video"></p> //temporal
+
     <script type="module">
         import Game from './game.js';
         import Menu from './menus/menu.js';
         import MenuArmas from './menus/menuArmas.js';
 
-        var config = {
-            type: Phaser.AUTO,
-            width: 896,
-            height: 640,
-            pixelArt: true,
-            input: {
-                gamepad: true
-            },
-            scale: {
-                // mode: Phaser.Scale.FIT
-                autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
-            },
-            scene: [Menu, Game, MenuArmas],
-            physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
+        const video = document.getElementById('video');
 
-        };
-        new Phaser.Game(config);  
+        if (numPlayer == 0) {
+
+            var config = {
+                type: Phaser.AUTO,
+                width: 896,
+                height: 640,
+                pixelArt: true,
+                input: {
+                    gamepad: true
+                },
+                scale: {
+                    // mode: Phaser.Scale.FIT
+                    autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+                },
+                scene: [Menu, Game, MenuArmas],
+                physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
+
+            };
+            new Phaser.Game(config);
+            console.log('0');
+
+
+        } else {
+
+            video.innerHTML = "Habemus video";
+
+        }
+
     </script>
-
-
 
 </body>
 
