@@ -36,10 +36,10 @@ export default class Game extends Phaser.Scene { //es una escena
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
 
     this.player = new Player(this, 100, 100); //crea un container Player
-    let tank = new Tank(this, 'tank', this.player).setOrigin(0.5, 0.5); //se crea el tanque en si
+    this.tank = new Tank(this, 'tank', this.player).setOrigin(0.5, 0.5); //se crea el tanque en si
     this.barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0); //se crea el cañon
     
-    this.player.add(tank);
+    this.player.add(this.tank);
     this.player.add(this.barrel); //se les añade al container player
     
     this.lifeContainer = this.add.image(_c.settBarraVida.posicionContainer.x, _c.settBarraVida.posicionContainer.y, 'containerVida').setOrigin(0, 0).setDepth(10);
@@ -86,7 +86,14 @@ export default class Game extends Phaser.Scene { //es una escena
     }
 
 
+    this.socket.emit('update', { //toda la info necesaria
+      posJ1: {x:this.player.x, y:this.player.y},
+      rotJ1: this.tank.angle,
+      rotCanJ1: this.barrel.angle,
 
+
+
+    })
 
   }
   

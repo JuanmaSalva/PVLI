@@ -29,17 +29,18 @@ export default class Game extends Phaser.Scene { //es una escena
   create() {
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
 
-    this.lifeContainer = this.add.image(_c.settBarraVida.posicionContainer.x, _c.settBarraVida.posicionContainer.y, 'containerVida').setOrigin(0, 0).setDepth(10);
-    this.lifeContainer.displayWidth = _c.settBarraVida.widthContainer;
-    this.lifeBar = this.add.image(_c.settBarraVida.posicionBarra.x, _c.settBarraVida.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9);
-    this.lifeBar.displayWidth = _c.settBarraVida.widthContainer;
-
     this.shootContainer = this.add.image(_c.settBarraRech.posicionContainer.x, _c.settBarraRech.posicionContainer.y, 'containerVida').setOrigin(0, 0);
     this.shootContainer.setDepth(10).setAngle(90).setTint(_c.settBarraRech.colorContainer);
     this.shootContainer.displayWidth = _c.settBarraRech.widthContainer;
     this.shootBar = this.add.image(_c.settBarraRech.posicionBarra.x, _c.settBarraRech.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9).setAngle(90).setTint(0x26ff00);
     this.shootBar.displayWidth = _c.settBarraRech.widthContainer-11;
     this.speedRecharge = 0;
+
+    this.lifeContainer = this.add.image(_c.settBarraVida.posicionContainer.x, _c.settBarraVida.posicionContainer.y, 'containerVida').setOrigin(0, 0).setDepth(10);
+    this.lifeContainer.displayWidth = _c.settBarraVida.widthContainer;
+    this.lifeBar = this.add.image(_c.settBarraVida.posicionBarra.x, _c.settBarraVida.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9);
+    this.lifeBar.displayWidth = _c.settBarraVida.widthContainer;
+
 
     let map = this.make.tilemap({
       key: 'tilemap',
@@ -51,6 +52,22 @@ export default class Game extends Phaser.Scene { //es una escena
     map.createStaticLayer("Background", tileset, 0, 0).setDepth(-2).setScale(0.5); //se crea el fondo desde el tileset
     map.createStaticLayer("Walls", tileset, 0, 0).setDepth(-1).setScale(0.5);  //Capa de las paredes
     map.createStaticLayer("Deco", tileset, 0, 0).setDepth(0).setScale(0.5);
+
+    this.p1 = this.add.image(100, 100, 'tank');
+    this.p1Canon = this.add.image(100,100,'redBarrel1')
+
+    this.socket.on("update", datos => { //aqui llega todo
+
+      this.p1.x = datos.posJ1.x;
+      this.p1.y = datos.posJ1.y;
+      this.p1.angle = datos.rotJ1;
+      this.p1Canon.x = datos.posJ1.x ;
+      this.p1Canon.y = datos.posJ1.y;
+      this.p1Canon.angle=datos.rotCanJ1;
+    
+    
+    })
   }
 
 }
+

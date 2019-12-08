@@ -59,7 +59,7 @@ export default class MenuArmas extends Phaser.Scene {
         this.boton.on('pointerdown', pointer => {
             if (armaPrincipalSeleccionada != "" && armaSecundariaSeleccionada != "") {
                 this.socket.emit("empezar",this.numPlayer); //avisa al server de que hay un juegador esprando
-
+                
                 this.socket.on('respuestaJugadoresEsperando', comienzo => {
                     if (comienzo) {
                         if (this.numPlayer == 0) this.scene.start('main', { principal: armaPrincipalSeleccionada, secundaria: armaSecundariaSeleccionada, soc: this.socket });
@@ -67,7 +67,7 @@ export default class MenuArmas extends Phaser.Scene {
                     }
                     else console.log("Esperando a otro jugador para empezar la partida");
                 })
-            }; //main = el key de la escena Game
+            };
         })
     }
 
