@@ -1,3 +1,5 @@
+import * as _c from '../constantes.js'
+
 export default class BalaMortero extends Phaser.GameObjects.Sprite {
     constructor(scene, imag, vel, pool, damage, rango) {
         super(scene, 0, 0, imag);
@@ -23,13 +25,13 @@ export default class BalaMortero extends Phaser.GameObjects.Sprite {
     preUpdate() {
         if (this.isMoving){
             if (!this.medio) {
-                this.scala = this.scala + 0.1;
+                this.scala = this.scala + _c.settBMortero.velocidadCrecimientoEscala;
                 this.setScale(this.scala);
                 if ((this.direccion[1] > 0 && this.y > this.puntoMedio[1]) || (this.direccion[1] < 0 && this.y < this.puntoMedio[1])
                 || (this.direccion[0] > 0 && this.x > this.puntoMedio[0]) && (this.direccion[0] < 0 && this.x < this.puntoMedio[0])) this.medio = true;
             }
             else {
-                this.scala = this.scala - 0.1;
+                this.scala = this.scala - _c.settBMortero.velocidadDerecimientoEscala_;
                 this.setScale(this.scala);
                 if (this.scala<this.escalaInicial) {
 
