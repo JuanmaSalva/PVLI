@@ -3,7 +3,7 @@ const app = express(); // servidor de aplicaciones
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
-const PORT = 3000;
+const PORT = 80;
 var clients = [];
 
 
