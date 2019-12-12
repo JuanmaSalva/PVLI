@@ -5,16 +5,19 @@ import PoolBalas from './balas/balasPool.js'
 import ExplosionAnim from './balas/explosion.js'
 import * as _c from './constantes.js'
 
+
 export default class Game extends Phaser.Scene { //es una escena
   constructor() {
     super({ key: 'main' });
+
   }
 
   //es llamado cuando esta escne se carga
   init(data) {
     this.playerData = data; //la informacion de las armas seleccionadas
-    this.iconoArmaPrincipal = this.add.image(32, 608, data.principal).setScale(0.7).setDepth(10);;
-    this.iconoArmaSecundaria = this.add.image(85, 618, data.secundaria).setScale(0.45).setDepth(10);;
+    this.iconoArmaPrincipal = this.add.image(32,608,data.principal).setScale(0.7).setDepth(10);;
+    this.iconoArmaSecundaria = this.add.image(85,618,data.secundaria).setScale(0.45).setDepth(10);;
+    this.socket = data.soc;
   }
 
   preload() {
@@ -31,6 +34,7 @@ export default class Game extends Phaser.Scene { //es una escena
 
   create() {
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
+
 
     this.player = new Player(this, _c.settPlayer.posicionInicial.x, _c.settPlayer.posicionInicial.y); //crea un container Player
     let tank = new Tank(this, 'tank', this.player).setOrigin(0.5, 0.5); //se crea el tanque en si
@@ -81,8 +85,18 @@ export default class Game extends Phaser.Scene { //es una escena
     if (this.shootContainer.displayWidth > this.shootBar.displayWidth + _c.settBarraRech.margenWidth) {
       this.shootBar.displayWidth += this.speedRecharge;
     }
-  }
 
+
+    this.socket.emit('update', { //toda la info necesaria
+      posJ1: {x:this.player.x, y:this.player.y},
+      rotJ1: this.tank.angle,
+      rotCanJ1: this.barrel.angle,
+
+
+
+    })
+
+  }
 
   setRangeMortero = function (rango) {
     this.barrel.setRange(rango);
@@ -90,6 +104,7 @@ export default class Game extends Phaser.Scene { //es una escena
 
   //se ha disparado y segun el arma se llama a la pool adecuada
   spawnBala = function (x, y, arma) {
+    //this.socket.emit("disparo", {player:0,arma:arma});
     if (arma == 'disparoSimple') this.poolBalasSimples.shoot(x, y);
     else if (arma == 'rafagas') this.poolBalasRafagas.shoot(x, y);
     else if (arma == 'rebotador') this.poolBalasRebotador.shoot(x, y);
@@ -120,7 +135,6 @@ export default class Game extends Phaser.Scene { //es una escena
     this.speedRecharge = _c.settBarraRech.velocidadUIRecarga / time;
     this.shootBar.setTint(_c.settBarraRech.colorBarraCharged);
   }
-
 
   toggleShoot = function () {
     this.isShootable = true;
