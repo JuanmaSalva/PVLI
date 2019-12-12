@@ -12,6 +12,7 @@ export default class Pool extends Phaser.GameObjects.Container {
         this.pointer = this.scene.input.activePointer; //cursor del raton
 
         let entities = []; //vector de balas
+        this.entitiesAlive = [];
         for (let i = 0; i < numElementosPool; i++) {
             if (arma === 'disparosimple') entities.push(new BulletSimple(scene, imag, velocidad, numrebotes, paredes, this, 0, daño)); //creacion de las balas
             else if (arma === 'rafagas') entities.push(new BulletRafaga(scene, imag, velocidad, numrebotes, paredes, this, 0, daño)); //creacion de las balas
@@ -41,7 +42,7 @@ export default class Pool extends Phaser.GameObjects.Container {
         if(rango)scene.setRangeMortero(rango);
     }
 
-    spawn = function (x, y) {
+    spawn = function (x, y) {        
         let entity = this._group.getFirstDead();
         if (entity) { //la inicializa
             entity.x = x;
@@ -49,6 +50,7 @@ export default class Pool extends Phaser.GameObjects.Container {
             entity.setActive(true);
             entity.setVisible(true);
             entity.direccion(this.pointer.worldX, this.pointer.worldY);
+            this.entitiesAlive.push(entity);
         }
         this.isShootable = false; //no puede dispara
     }
@@ -61,8 +63,8 @@ export default class Pool extends Phaser.GameObjects.Container {
     shoot = function (x, y) {
         if (this.scena.isShootable && !this.scena.recharging) {
             this.spawn(x, y); //dispara
-    
-            if (this.arma == "rafagas") { //si el arma selecionada en rafagas hay un delay de 100 entre cada bala
+            
+            if (this.arma == "rafagas") {
                 this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.rafaga, [], this)
                 this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.rafaga, [], this)
             }
@@ -85,6 +87,8 @@ export default class Pool extends Phaser.GameObjects.Container {
                 encontrado = true;
                 this._group.children[i].setActive(false);
                 this._group.children[i].setVisible(false);
+
+                this.entitiesAlive.splice(i,1); //elimina esa bala del array
     
                 this._group.children[i].x = this._group.children[i].y = 50;
                 this._group.children[i].body.velocity.x = this._group.children[i].body.velocity.y = 0;
@@ -95,5 +99,5 @@ export default class Pool extends Phaser.GameObjects.Container {
     
             i++;
         }
-    }
+    }    
 }
