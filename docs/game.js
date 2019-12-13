@@ -15,8 +15,8 @@ export default class Game extends Phaser.Scene { //es una escena
   //es llamado cuando esta escne se carga
   init(data) {
     this.playerData = data; //la informacion de las armas seleccionadas
-    this.iconoArmaPrincipal = this.add.image(32,608,data.principal).setScale(0.7).setDepth(10);;
-    this.iconoArmaSecundaria = this.add.image(85,618,data.secundaria).setScale(0.45).setDepth(10);;
+    this.iconoArmaPrincipal = this.add.image(32, 608, data.principal).setScale(0.7).setDepth(10);;
+    this.iconoArmaSecundaria = this.add.image(85, 618, data.secundaria).setScale(0.45).setDepth(10);;
     this.socket = data.soc;
   }
 
@@ -55,8 +55,8 @@ export default class Game extends Phaser.Scene { //es una escena
     this.shootBar.displayWidth = _c.settBarraRech.widthContainer - _c.settBarraRech.margenWidth;
     this.speedRecharge = 0;
 
-    this.isShootable = false;
-    this.recharging = true; //empiezan del reves por q si no cuendo cambias de escene dispara ya de una
+    this.isShootable = true;
+    this.recharging = false; //empiezan del reves por q si no cuendo cambias de escene dispara ya de una
 
     this.player.setArmas(this.playerData.principal, this.playerData.secundaria);
     this.player.canon = this.barrel;
@@ -87,15 +87,28 @@ export default class Game extends Phaser.Scene { //es una escena
     }
 
 
+
+    //habria que meter hasta la linea 120 en un metodo pero ahora me voy a comer
+    this.balasSimples = [];
+    this.balasRafagas = [];
+    this.balasRebotadoras = [];
+    this.balasMortero = [];
+
+    //guarda toda la informacion de todas las balas activas en pantalla
+    for (let i = 0; i < this.poolBalasSimples.entitiesAlive.length; i++) this.balasSimples.push({ x: this.poolBalasSimples.entitiesAlive[i].x, y: this.poolBalasSimples.entitiesAlive[i].y, angle: this.poolBalasSimples.entitiesAlive[i].angle })
+    for (let i = 0; i < this.poolBalasRafagas.entitiesAlive.length; i++) this.balasRafagas.push({ x: this.poolBalasRafagas.entitiesAlive[i].x, y: this.poolBalasRafagas.entitiesAlive[i].y, angle: this.poolBalasRafagas.entitiesAlive[i].angle })
+    for (let i = 0; i < this.poolBalasRebotador.entitiesAlive.length; i++) this.balasRebotadoras.push({ x: this.poolBalasRebotador.entitiesAlive[i].x, y: this.poolBalasRebotador.entitiesAlive[i].y, angle: this.poolBalasRebotador.entitiesAlive[i].angle })
+    for (let i = 0; i < this.poolBalasMortero.entitiesAlive.length; i++)this.balasMortero.push({ x: this.poolBalasMortero.entitiesAlive[i].x, y: this.poolBalasMortero.entitiesAlive[i].y, angle: this.poolBalasMortero.entitiesAlive[i].angle, scale: this.poolBalasMortero.entitiesAlive[i].scale })
+
     this.socket.emit('update', { //toda la info necesaria
-      posJ1: {x:this.player.x, y:this.player.y},
+      posJ1: { x: this.player.x, y: this.player.y },
       rotJ1: this.tank.angle,
       rotCanJ1: this.barrel.angle,
-
-
-
+      balasSimple: this.balasSimples,
+      balasRafagas: this.balasRafagas,
+      balasRebotadoras: this.balasRebotadoras,
+      balasMortero: this.balasMortero,
     })
-
   }
 
   setRangeMortero = function (rango) {
@@ -104,7 +117,6 @@ export default class Game extends Phaser.Scene { //es una escena
 
   //se ha disparado y segun el arma se llama a la pool adecuada
   spawnBala = function (x, y, arma) {
-    //this.socket.emit("disparo", {player:0,arma:arma});
     if (arma == 'disparoSimple') this.poolBalasSimples.shoot(x, y);
     else if (arma == 'rafagas') this.poolBalasRafagas.shoot(x, y);
     else if (arma == 'rebotador') this.poolBalasRebotador.shoot(x, y);
@@ -113,11 +125,16 @@ export default class Game extends Phaser.Scene { //es una escena
 
   //devuelve la posicion del jugador
   canonPosition = function () {
-    let pos = {x: this.player.x, y :this.player.y};
+    let pos = { x: this.player.x, y: this.player.y };
     return pos;
   }
 
   explosion(x, y) {
+    this.socket.emit('explosion', { //avisa al segundo jugador de que se ha producido una explosion
+      x: x,
+      y: y,
+    })
+
     new ExplosionAnim(this, x, y, 'animacion'); //crea la animacion de la explosion en el lugar dado
   }
 
