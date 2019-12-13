@@ -14,9 +14,9 @@ export default class Pool extends Phaser.GameObjects.Container {
         let entities = []; //vector de balas
         this.entitiesAlive = [];
         for (let i = 0; i < numElementosPool; i++) {
-            if (arma === 'disparosimple') entities.push(new BulletSimple(scene, imag, velocidad, numrebotes, paredes, this, 0, daño)); //creacion de las balas
-            else if (arma === 'rafagas') entities.push(new BulletRafaga(scene, imag, velocidad, numrebotes, paredes, this, 0, daño)); //creacion de las balas
-            else if (arma === 'rebotador') entities.push(new BulletRebotador(scene, imag, velocidad, numrebotes, paredes, this, aceleracion, daño)); //creacion de las balas
+            if (arma === 'disparosimple') entities.push(new BulletSimple(scene, imag, velocidad, numrebotes, paredes, this, daño, player)); //creacion de las balas
+            else if (arma === 'rafagas') entities.push(new BulletRafaga(scene, imag, velocidad, numrebotes, paredes, this, daño, player)); //creacion de las balas
+            else if (arma === 'rebotador') entities.push(new BulletRebotador(scene, imag, velocidad, numrebotes, paredes, this, aceleracion, daño, player)); //creacion de las balas
             else if (arma === 'mortero') entities.push(new BulletMortero(scene, imag, velocidad, this, daño, rango)); //creacion de las balas
 
             entities[i].x = _c.settBalasGeneral.posicionBalasDesactivadas.x;

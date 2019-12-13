@@ -1,6 +1,7 @@
 import Bullet from './bullet.js'
+import * as _c from '../constantes.js'
 export default class BalaRebotadora extends Bullet {
-    constructor(scene, imag, vel, reb, paredes, pool, aceleracion, damage) {
+    constructor(scene, imag, vel, reb, paredes, pool, aceleracion, damage, player) {
         super(scene, imag);
         this.velocidad = vel; //pone la velocidad del padre
         this.rebotesAcumulados = 0;
@@ -30,6 +31,13 @@ export default class BalaRebotadora extends Bullet {
                 this.rebotesAcumulados = 0;
             }
         }, null, this); //añade las colisiones con los muros
+
+        scene.physics.add.collider(player, this, function () { 
+            scene.lifeBar.displayWidth = (player.dealDmg(damage))* _c.settBarraVida.escalaBarraA_Vida;            
+            pool.delete(this, false);
+            this.velocidad = vel;
+            this.rebotesAcumulados = 0;
+        }, null, this); // colision con el jugador
 
     }
 

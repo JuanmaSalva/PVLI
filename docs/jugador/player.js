@@ -7,6 +7,7 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.scene.physics.add.existing(this); //le otorga presencia fisica
     this.body.setCollideWorldBounds(); //colisiona con los bordes de la partida
     this.body.setCircle(_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox);
+    this.body.immovable = true;
     this._maxSpeed = _c.settPlayer.velocidadMax;
     this.speed = this._maxSpeed;
     this.cursors = this.scene.input.keyboard.createCursorKeys();
@@ -38,6 +39,7 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
         this.life = 0;
         console.log('Murio wey');
       }
+      return this.life;
     }
     this.revive = function () { //se revive al juegador
       this.life = this._maxLife;
@@ -68,7 +70,6 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     else if (this.j.isDown) this.dealDmg(1);//PROVISIONAL
     else if (this.k.isDown) this.revive();//PROVISIONAL   
     
-    this.scena.lifeBar.displayWidth = this.life*_c.settBarraVida.escalaBarraA_Vida;
   }
 
   spawnBala = function (arma) {

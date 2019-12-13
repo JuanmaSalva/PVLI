@@ -21,6 +21,7 @@ export const settBarraVida = {
     widthContainer: 170,
     posicionBarra: { x: 8, y: 7 },
     escalaBarraA_Vida: 1.6,
+    margenWidth: 11,
 };
 
 export const settBarraRech = {

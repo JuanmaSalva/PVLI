@@ -163,7 +163,6 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   activarExplosion = function (datos) {
-    console.log(datos);
     new ExplosionAnim(this, datos.x, datos.y, 'animacion'); //crea la animacion de la explosion en el lugar dado
   }
 }
