@@ -1,4 +1,5 @@
 import * as _c from './constantes.js'
+import ExplosionAnim from './balas/explosion.js'
 
 export default class Game extends Phaser.Scene { //es una escena
   constructor() {
@@ -76,14 +77,11 @@ export default class Game extends Phaser.Scene { //es una escena
       this.poolBalasRebotador.push(this.add.sprite(-50, -50, 'bala1').setScale(1.5).setDepth(-1));
     }
     for (let i = 0; i < _c.settBSimples.cantidadPool; i++) {
-      this.poolBalasMortero.push(this.add.sprite(-50, -50, 'balaMortero').setScale(1.5).setDepth(-1));
+      this.poolBalasMortero.push(this.add.sprite(-50, -50, 'balaMortero').setScale(1.5).setDepth(0));
     }
 
 
-
-
-    this.socket.on("update", datos => { //aqui llega todo
-
+    this.socket.on("update", datos => { //aqui llega todo (excepto explosiones)
       this.p1.x = datos.posJ1.x;
       this.p1.y = datos.posJ1.y;
       this.p1.angle = datos.rotJ1;
@@ -93,11 +91,16 @@ export default class Game extends Phaser.Scene { //es una escena
 
       this.actualizarBalasSimples(datos);
       this.actualizarBalasRafagas(datos);
-      this.actualizarBalasRebotador(adtos);
+      this.actualizarBalasRebotador(datos);
+      this.actualizarBalasMortero(datos);
+    })
+
+    this.socket.on("explosion", datos => {
+      this.activarExplosion(datos);
     })
   }
 
-  actualizarBalasSimples = function(datos) {
+  actualizarBalasSimples = function (datos) {
     for (let i = 0; i < datos.balasSimple.length; i++) {
       this.poolBalasSimples[i].x = datos.balasSimple[i].x;
       this.poolBalasSimples[i].y = datos.balasSimple[i].y;
@@ -113,7 +116,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.balasSimplesActivas = datos.balasSimple.length;
   }
 
-  actualizarBalasRafagas = function(datos){
+  actualizarBalasRafagas = function (datos) {
     for (let i = 0; i < datos.balasRafagas.length; i++) {
       this.poolBalasRafagas[i].x = datos.balasRafagas[i].x;
       this.poolBalasRafagas[i].y = datos.balasRafagas[i].y;
@@ -128,7 +131,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.balasRafagasActivas = datos.balasRafagas.length;
   }
 
-  actualizarBalasRebotador = function(datos) {
+  actualizarBalasRebotador = function (datos) {
     for (let i = 0; i < datos.balasRebotadoras.length; i++) {
       this.poolBalasRebotador[i].x = datos.balasRebotadoras[i].x;
       this.poolBalasRebotador[i].y = datos.balasRebotadoras[i].y;
@@ -143,11 +146,12 @@ export default class Game extends Phaser.Scene { //es una escena
     this.balasRebotadorasActivas = datos.balasRebotadoras.length;
   }
 
-  actualizarBalasMortero = function(datos) {
+  actualizarBalasMortero = function (datos) {
     for (let i = 0; i < datos.balasMortero.length; i++) {
       this.poolBalasMortero[i].x = datos.balasMortero[i].x;
       this.poolBalasMortero[i].y = datos.balasMortero[i].y;
       this.poolBalasMortero[i].angle = datos.balasMortero[i].angle;
+      this.poolBalasMortero[i].scale = datos.balasMortero[i].scale;
       if (i + 1 > this.balasMorteroActivas) this.balasMorteroActivas = i + 1;
     }
 
@@ -156,6 +160,11 @@ export default class Game extends Phaser.Scene { //es una escena
       this.poolBalasMortero[i].y = -50;
     }
     this.balasMorteroActivas = datos.balasMortero.length;
+  }
+
+  activarExplosion = function (datos) {
+    console.log(datos);
+    new ExplosionAnim(this, datos.x, datos.y, 'animacion'); //crea la animacion de la explosion en el lugar dado
   }
 }
 

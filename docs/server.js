@@ -82,6 +82,10 @@ io.on('connection', socket => {
   })
 
 
+  socket.on('explosion', data => {
+    clients[1].emit('explosion', data);
+  })
+
 
   socket.on('disconnect', () => {
     console.log('a user disconnected');
