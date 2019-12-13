@@ -18,5 +18,4 @@ export default class ExplosionAnim extends Phaser.GameObjects.Sprite { //es un g
 
         this.play('explo'); //le da a la animacion
     }
-
 }

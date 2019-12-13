@@ -25,10 +25,14 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.spritesheet('animacion', 'assets/explosion.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('barraVida', 'assets/BarraVida.png');
     this.load.image('containerVida', 'assets/ContainerVida.png');
+    this.load.image('blueTank', 'assets/blueTank.png');
+    this.load.image('blueBarrel', 'assets/blueBarrel.png');
   } //cargar los recursos
 
   create() {
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
+
+    this.pointer = this.input.activePointer; //cursor del raton
 
     this.shootContainer = this.add.image(_c.settBarraRech.posicionContainer.x, _c.settBarraRech.posicionContainer.y, 'containerVida').setOrigin(0, 0);
     this.shootContainer.setDepth(10).setAngle(90).setTint(_c.settBarraRech.colorContainer);
@@ -56,6 +60,9 @@ export default class Game extends Phaser.Scene { //es una escena
 
     this.p1 = this.add.sprite(100, 100, 'tank');
     this.p1Canon = this.add.sprite(100, 100, 'redBarrel1').setOrigin(0.5, 0);
+
+    this.p2 = this.add.sprite(100, 100, 'blueTank');
+    this.p2Canon = this.add.sprite(100, 100, 'blueBarrel').setOrigin(0.5, 0);
 
     this.poolBalasSimples = [];
     this.poolBalasRafagas = []
@@ -89,6 +96,13 @@ export default class Game extends Phaser.Scene { //es una escena
       this.p1Canon.y = datos.posJ1.y;
       this.p1Canon.angle = datos.rotCanJ1;
 
+      this.p2.x = datos.posJ2.x;
+      this.p2.y = datos.posJ2.y;
+      this.p2.angle = datos.rotJ2;
+      this.p2Canon.x = datos.posJ2.x;
+      this.p2Canon.y = datos.posJ2.y;
+      this.p2Canon.angle = datos.rotCanJ2;
+
       this.actualizarBalasSimples(datos);
       this.actualizarBalasRafagas(datos);
       this.actualizarBalasRebotador(datos);
@@ -98,7 +112,46 @@ export default class Game extends Phaser.Scene { //es una escena
     this.socket.on("explosion", datos => {
       this.activarExplosion(datos);
     })
+
+
+    this.w = this.input.keyboard.addKey('W');
+    this.a = this.input.keyboard.addKey('A');
+    this.s = this.input.keyboard.addKey('S');
+    this.d = this.input.keyboard.addKey('D');
+    this.q = this.input.keyboard.addKey('Q');
+
+
+    this.q.on('down', this.cambioArma, this);
+
+    this._maxSpeed = _c.settPlayer2.velocidadMax;
   }
+
+
+  update() {
+
+    let velX = 0;
+    let velY = 0;
+
+    /*if ((this.s.isDown || this.w.isDown) && (this.s.isDown || this.w.isDown)) vel = this._maxSpeed * 71 / 100;
+    else vel = this._maxSpeed;*/
+    if (this.w.isDown) {
+      velY = -this._maxSpeed;
+    } else if (this.s.isDown) {
+      velY = this._maxSpeed;
+    }
+
+    if (this.a.isDown) {
+      velX = -this._maxSpeed;
+    } else if (this.d.isDown) {
+      velX = this._maxSpeed;
+    }
+
+    this.socket.emit('updateP2', { //toda la info necesaria
+      cursor: { x: this.pointer.worldX, y: this.pointer.worldY },
+      velocidad: {x: velX, y:velY},
+    });
+  }
+
 
   actualizarBalasSimples = function (datos) {
     for (let i = 0; i < datos.balasSimple.length; i++) {
@@ -165,6 +218,11 @@ export default class Game extends Phaser.Scene { //es una escena
   activarExplosion = function (datos) {
     console.log(datos);
     new ExplosionAnim(this, datos.x, datos.y, 'animacion'); //crea la animacion de la explosion en el lugar dado
+  }
+
+
+  cambioArma() {
+    //avisar de cambio de arma
   }
 }
 

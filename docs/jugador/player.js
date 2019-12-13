@@ -44,8 +44,7 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
       console.log('1up');
     }
 
-    let q = scene.input.keyboard.addKey('Q');  //boton de cambio de arma
-    q.on('down', this.cambioArma, this);
+    this.q.on('down', this.cambioArma, this);
   }
 
   preUpdate() {

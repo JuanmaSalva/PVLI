@@ -87,6 +87,11 @@ io.on('connection', socket => {
   })
 
 
+  socket.on('updateP2', data => {
+    clients[0].emit('updateP2', data);
+  });
+
+
   socket.on('disconnect', () => {
     console.log('a user disconnected');
     clients.splice(clients.indexOf(socket), 1); // lo sacamos del array
