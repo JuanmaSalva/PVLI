@@ -3,9 +3,6 @@ import Canon from './jugador/canon.js'
 import Tank from './jugador/tank.js'
 import PoolBalas from './balas/balasPool.js'
 import ExplosionAnim from './balas/explosion.js'
-import Player2 from './jugador/player2.js'
-import Canon2 from './jugador/canon2.js'
-import Tank2 from './jugador/tank2.js'
 import * as _c from './constantes.js'
 
 
@@ -46,9 +43,13 @@ export default class Game extends Phaser.Scene { //es una escena
     this.tank = new Tank(this, 'tank', this.player).setOrigin(0.5, 0.5); //se crea el tanque en si
     this.barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0); //se crea el cañon
 
-    this.player2 = new Player2(this, _c.settPlayer2.posicionInicial.x, _c.settPlayer2.posicionInicial.y); //crea un container Player
-    this.tank2 = new Tank2(this, 'blueTank', this.player2).setOrigin(0.5, 0.5); //se crea el tanque en si
-    this.barrel2 = new Canon2(this, 'blueBarrel', this.player2).setOrigin(0.5, 0); //se crea el cañon
+    //this.player2 = new Player2(this, _c.settPlayer2.posicionInicial.x, _c.settPlayer2.posicionInicial.y); //crea un container Player
+    this.player2 = this.add.container(_c.settPlayer2.posicionInicial.x, _c.settPlayer2.posicionInicial.y);
+    this.physics.add.existing(this.player2); //le otorga presencia fisica
+    this.player2.body.setCollideWorldBounds().setCircle(_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox); //colisiona con los bordes de la partida
+    
+    this.tank2 = this.add.sprite(0,0,'blueTank').setOrigin(0.5, 0.5); //se crea el tanque en si
+    this.barrel2 = this.add.sprite(0,0,'blueBarrel').setOrigin(0.5, 0);
 
     this.player.add(this.tank);
     this.player.add(this.barrel); //se les añade al container player
