@@ -14,7 +14,7 @@ export default class BalaRebotadora extends Bullet {
                 let angle = (Phaser.Math.Angle.Between(this.x, this.y, this.x + this.body.velocity.x, this.y + this.body.velocity.y) - Math.PI / 2);
                 this.rotation = angle;  //pone la bala apuntando al raton
 
-                this.daño += this.daño/5; //cada vez que rebota su daño aumenta en un 20% (GDD)
+                this.daño += this.daño / 5; //cada vez que rebota su daño aumenta en un 20% (GDD)
                 this.velocidad += aceleracion;
 
                 let modulo = Math.sqrt((this.body.velocity.x * this.body.velocity.x) + (this.body.velocity.y * this.body.velocity.y)); //calculo del modulo de la direccion
@@ -26,14 +26,14 @@ export default class BalaRebotadora extends Bullet {
                 this.body.setVelocityY(this.direccion[1] * this.velocidad);
             }
             else {
-                pool.delete(this,false); //destruirse
+                pool.delete(this, false); //destruirse
                 this.velocidad = vel;
                 this.rebotesAcumulados = 0;
             }
         }, null, this); //añade las colisiones con los muros
 
-        scene.physics.add.collider(player, this, function () { 
-            scene.lifeBar.displayWidth = (player.dealDmg(damage))* _c.settBarraVida.escalaBarraA_Vida;            
+        scene.physics.add.collider(player, this, function () {
+            scene.lifeBar.displayWidth = (player.dealDmg(damage)) * _c.settBarraVida.escalaBarraA_Vida;
             pool.delete(this, false);
             this.velocidad = vel;
             this.rebotesAcumulados = 0;

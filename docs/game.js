@@ -137,7 +137,7 @@ export default class Game extends Phaser.Scene { //es una escena
       y: y,
     })
 
-    new ExplosionAnim(this, x, y, 'animacion'); //crea la animacion de la explosion en el lugar dado
+    new ExplosionAnim(this, x, y, 'animacion', this.player); //crea la animacion de la explosion en el lugar dado
   }
 
   cambiarIconosArmas() {
