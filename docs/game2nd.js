@@ -13,6 +13,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.iconoArmaPrincipal = this.add.image(32, 608, data.principal).setScale(0.7).setDepth(10);;
     this.iconoArmaSecundaria = this.add.image(85, 618, data.secundaria).setScale(0.45).setDepth(10);;
     this.socket = data.soc;
+    this.arma = data.principal;
   }
 
   preload() {
@@ -46,6 +47,19 @@ export default class Game extends Phaser.Scene { //es una escena
     this.lifeBar = this.add.image(_c.settBarraVida.posicionBarra.x, _c.settBarraVida.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9);
     this.lifeBar.displayWidth = _c.settBarraVida.widthContainer;
 
+    this.input.on('pointerdown', pointer => { //creacion del evento de cuando se suelta el clic
+      if (this.arma !== 'mortero' && this.arma != 'rafagas') this.disparar();
+      else if (this.arma === 'rafagas') {
+        this.disparar();
+        this.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.disparar, [], this);
+        this.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.disparar, [], this);
+      }
+    })
+
+    this.input.on('pointerup', pointer => { //creacion del evento de cuando se suelta el clic      
+      if (this.arma === 'mortero' && this.circulo) this.circulo.destroy();
+      if (this.arma === 'mortero' && pointer.leftButtonReleased()) this.disparar();
+    })
 
     let map = this.make.tilemap({
       key: 'tilemap',
@@ -113,45 +127,68 @@ export default class Game extends Phaser.Scene { //es una escena
       this.activarExplosion(datos);
     })
 
-
     this.w = this.input.keyboard.addKey('W');
     this.a = this.input.keyboard.addKey('A');
     this.s = this.input.keyboard.addKey('S');
     this.d = this.input.keyboard.addKey('D');
     this.q = this.input.keyboard.addKey('Q');
 
-
     this.q.on('down', this.cambioArma, this);
 
     this._maxSpeed = _c.settPlayer2.velocidadMax;
-  }
+    this.oldAngle = 0;
+    this.angle2 = 0;
 
+    this.isRecharging = false;
+  }
 
   update() {
 
     let velX = 0;
     let velY = 0;
 
+    this.dir = 0;
+    this.angleObj = 0;
+
     /*if ((this.s.isDown || this.w.isDown) && (this.s.isDown || this.w.isDown)) vel = this._maxSpeed * 71 / 100;
     else vel = this._maxSpeed;*/
     if (this.w.isDown) {
       velY = -this._maxSpeed;
+      this.angleObj += this.oldAngle = 0;
+      this.dir += 1;
     } else if (this.s.isDown) {
       velY = this._maxSpeed;
+      this.angleObj += this.oldAngle = 180;
+      this.dir += 1;
     }
 
     if (this.a.isDown) {
       velX = -this._maxSpeed;
+      this.angleObj += this.oldAngle = 270;
+      this.dir += 1;
     } else if (this.d.isDown) {
       velX = this._maxSpeed;
+      this.angleObj += this.oldAngle = 90;
+      this.dir += 1;
     }
+
+    if (this.angle2 = this.angleObj / (this.dir || 1)) { }
+    else this.angle2 = this.oldAngle || 0;
 
     this.socket.emit('updateP2', { //toda la info necesaria
       cursor: { x: this.pointer.worldX, y: this.pointer.worldY },
-      velocidad: {x: velX, y:velY},
+      velocidad: { x: velX, y: velY },
+      angulo: this.angle2,
     });
-  }
 
+
+    if (this.pointer.isDown && this.arma == 'mortero') {
+      if (this.circulo) this.circulo.destroy();
+      this.circulo = this.add.circle(this.p2.x, this.p2.y, _c.settBMortero.rango + _c.settBMortero.variabilidadRadioCirculo);
+      this.circulo.setStrokeStyle(_c.settBMortero.anchoCirculoRango, _c.settBMortero.colorCirculoRango);
+    }
+
+  }
 
   actualizarBalasSimples = function (datos) {
     for (let i = 0; i < datos.balasSimple.length; i++) {
@@ -220,9 +257,35 @@ export default class Game extends Phaser.Scene { //es una escena
     new ExplosionAnim(this, datos.x, datos.y, 'animacion'); //crea la animacion de la explosion en el lugar dado
   }
 
-
   cambioArma() {
-    //avisar de cambio de arma
+    if (this.arma == this.playerData.principal) this.arma = this.playerData.secundaria;
+    else this.arma = this.playerData.principal;
+    let textureP = this.iconoArmaPrincipal.texture; //guarda la texturas para luego invertirlas
+    this.iconoArmaPrincipal.setTexture(this.iconoArmaSecundaria.texture.key);
+    this.iconoArmaSecundaria.setTexture(textureP.key);
+  }
+
+  disparar = function () {
+    if (this.isRecharging === false) {
+      this.socket.emit('disparoP2', {
+        x: this.p2Canon.x,
+        y: this.p2Canon.y,
+        arma: this.arma,
+        destino: { x: this.pointer.worldX, y: this.pointer.worldY },
+      });
+      this.toggleRecharging();
+
+      if(this.arma==="disparoSimple")this.time.delayedCall(_c.settBSimples.cadencia, this.toggleRecharging, [], this);
+      else if(this.arma === "rafagas")this.time.delayedCall(_c.settBRaf.cadencia, this.toggleRecharging, [], this);
+      else if(this.arma === "rebotador")this.time.delayedCall(_c.settBRebot.cadencia, this.toggleRecharging, [], this);
+      else if(this.arma === "mortero")this.time.delayedCall(_c.settBMortero.cadencia, this.toggleRecharging, [], this);
+
+      
+    }
+  }
+
+  toggleRecharging = function () {
+    this.isRecharging = !this.isRecharging;
   }
 }
 

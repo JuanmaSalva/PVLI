@@ -39,6 +39,7 @@ export default class Game extends Phaser.Scene { //es una escena
 
   create() {
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
+    this.pointer = this.input.activePointer; //cursor del raton
 
 
     this.player = new Player(this, _c.settPlayer.posicionInicial.x, _c.settPlayer.posicionInicial.y); //crea un container Player
@@ -92,17 +93,21 @@ export default class Game extends Phaser.Scene { //es una escena
     this.poolBalasRafagas = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRaf.cantidadPool, 'rafagas', _c.settBRaf.velocidad, _c.settBRaf.aceleracion, _c.settBRaf.rebotes, _c.settBRaf.cadencia, _c.settBRaf.daño);
     this.poolBalasMortero = new PoolBalas(this, null, this.player, 'balaMortero', _c.settBMortero.cantidadPool, 'mortero', _c.settBMortero.velocidad, _c.settBMortero.aceleracion, _c.settBMortero.rebotes, _c.settBMortero.cadencia, _c.settBMortero.daño, _c.settBMortero.rango);
     this.poolBalasRebotador = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRebot.cantidadPool, 'rebotador', _c.settBRebot.velocidad, _c.settBRebot.aceleracion, _c.settBRebot.rebotes, _c.settBRebot.cadencia, _c.settBRebot.daño);
-  
-  
-    this.socket.on("updateP2", datos => { 
+
+
+    this.socket.on("updateP2", datos => {
       let angle2 = (Phaser.Math.Angle.Between(datos.cursor.x + 10, datos.cursor.y + 10, this.player2.x, this.player2.y) + Math.PI / 2);  //es 10 del tamaño del cursor
       this.barrel2.rotation = angle2;
       this.player2.body.setVelocityY(datos.velocidad.y);
       this.player2.body.setVelocityX(datos.velocidad.x);
+      this.tank2.angle = datos.angulo;
     });
-  
-  
-  
+
+    this.socket.on("disparoP2", datos => {
+      this.spawnBala(datos.x, datos.y, datos.arma, true, datos.destino);
+    })
+
+
   }//inicializa todo
 
   update() {
@@ -126,7 +131,7 @@ export default class Game extends Phaser.Scene { //es una escena
       posJ1: { x: this.player.x, y: this.player.y },
       rotJ1: this.tank.angle,
       rotCanJ1: this.barrel.angle,
-      posJ2: {x:this.player2.x, y:this.player2.y},
+      posJ2: { x: this.player2.x, y: this.player2.y },
       rotJ2: this.tank2.angle,
       rotCanJ2: this.barrel2.angle,
       balasSimple: this.balasSimples,
@@ -141,11 +146,21 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   //se ha disparado y segun el arma se llama a la pool adecuada
-  spawnBala = function (x, y, arma) {
-    if (arma == 'disparoSimple') this.poolBalasSimples.shoot(x, y);
-    else if (arma == 'rafagas') this.poolBalasRafagas.shoot(x, y);
-    else if (arma == 'rebotador') this.poolBalasRebotador.shoot(x, y);
-    else if (arma == 'mortero') this.poolBalasMortero.shoot(x, y);
+  spawnBala = function (x, y, arma, J2, destino) {
+    if (!J2) {
+      if (arma == 'disparoSimple') this.poolBalasSimples.shoot(x, y, this.pointer.worldX, this.pointer.worldY);
+      else if (arma == 'rafagas') this.poolBalasRafagas.shoot(x, y, this.pointer.worldX, this.pointer.worldY);
+      else if (arma == 'rebotador') this.poolBalasRebotador.shoot(x, y, this.pointer.worldX, this.pointer.worldY);
+      else if (arma == 'mortero') this.poolBalasMortero.shoot(x, y, this.pointer.worldX, this.pointer.worldY);
+    }
+    else {
+      if (arma == 'disparoSimple') this.poolBalasSimples.spawn(x, y, destino.x, destino.y);
+      else if (arma == 'rafagas') this.poolBalasRafagas.spawn(x, y, destino.x, destino.y);
+      else if (arma == 'rebotador') this.poolBalasRebotador.spawn(x, y, destino.x, destino.y);
+      else if (arma == 'mortero') this.poolBalasMortero.spawn(x, y, destino.x, destino.y);
+    }
+
+
   }
 
   //devuelve la posicion del jugador

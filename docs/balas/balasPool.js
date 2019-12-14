@@ -9,8 +9,8 @@ export default class Pool extends Phaser.GameObjects.Container {
     constructor(scene, paredes,player,imag, numElementosPool, arma, velocidad, aceleracion, numrebotes, cad, daño, rango) {
         super(scene); //llama al constructor de la clase por encima
         this.scena = scene;
-        this.pointer = this.scene.input.activePointer; //cursor del raton
 
+        this.pointer = this.scena.input.activePointer; //cursor del raton
         let entities = []; //vector de balas
         this.entitiesAlive = [];
         for (let i = 0; i < numElementosPool; i++) {
@@ -42,34 +42,33 @@ export default class Pool extends Phaser.GameObjects.Container {
         if(rango)scene.setRangeMortero(rango);
     }
 
-    spawn = function (x, y) {        
+    spawn = function (x, y,destX,destY) {
         let entity = this._group.getFirstDead();
         if (entity) { //la inicializa
             entity.x = x;
             entity.y = y;
             entity.setActive(true);
             entity.setVisible(true);
-            entity.direccion(this.pointer.worldX, this.pointer.worldY);
+            entity.direccion(destX, destY);
             this.entitiesAlive.push(entity);
         }
-        this.isShootable = false; //no puede dispara
     }
 
     rafaga = function () {
         let pos = this.scena.canonPosition();
-        this.spawn(pos.x, pos.y); //dispara
+        this.spawn(pos.x, pos.y,this.pointer.worldX,this.pointer.worldY); //dispara
+        this.isShootable = false; //no puede dispara
     }
     
-    shoot = function (x, y) {
+    shoot = function (x, y,destX,destY) {
         if (this.scena.isShootable && !this.scena.recharging) {
-            this.spawn(x, y); //dispara
+            this.spawn(x, y,destX,destY); //dispara
+            this.isShootable = false; //no puede dispara
             
             if (this.arma == "rafagas") {
                 this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.rafaga, [], this)
                 this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.rafaga, [], this)
             }
-    
-            this.scena.isShootable = false; //no puede dispara
     
             if (!this.scena.recharging) {
                 this.scena.recharging = true;
