@@ -9,7 +9,12 @@ export const settPlayer = {
     vidaMax: 100,
 };
 
-
+export const settPlayer2 = {
+    tamañoHitbox: 15,
+    posicionInicial: { x: 150, y: 150 },
+    velocidadMax: 100,
+    vidaMax: 100,
+}
 
 
 //--------

@@ -30,18 +30,32 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.spritesheet('animacion', 'assets/explosion.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('barraVida', 'assets/BarraVida.png');
     this.load.image('containerVida', 'assets/ContainerVida.png');
+    this.load.image('blueTank', 'assets/blueTank.png');
+    this.load.image('blueBarrel', 'assets/blueBarrel.png');
   } //cargar los recursos
 
   create() {
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
+    this.pointer = this.input.activePointer; //cursor del raton
 
 
     this.player = new Player(this, _c.settPlayer.posicionInicial.x, _c.settPlayer.posicionInicial.y); //crea un container Player
     this.tank = new Tank(this, 'tank', this.player).setOrigin(0.5, 0.5); //se crea el tanque en si
     this.barrel = new Canon(this, 'redBarrel1', this.player).setOrigin(0.5, 0); //se crea el cañon
 
+    //this.player2 = new Player2(this, _c.settPlayer2.posicionInicial.x, _c.settPlayer2.posicionInicial.y); //crea un container Player
+    this.player2 = this.add.container(_c.settPlayer2.posicionInicial.x, _c.settPlayer2.posicionInicial.y);
+    this.physics.add.existing(this.player2); //le otorga presencia fisica
+    this.player2.body.setCollideWorldBounds().setCircle(_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox); //colisiona con los bordes de la partida
+
+    this.tank2 = this.add.sprite(0, 0, 'blueTank').setOrigin(0.5, 0.5); //se crea el tanque en si
+    this.barrel2 = this.add.sprite(0, 0, 'blueBarrel').setOrigin(0.5, 0);
+
     this.player.add(this.tank);
     this.player.add(this.barrel); //se les añade al container player
+
+    this.player2.add(this.tank2);
+    this.player2.add(this.barrel2); //se les añade al container player
 
     this.lifeContainer = this.add.image(_c.settBarraVida.posicionContainer.x, _c.settBarraVida.posicionContainer.y, 'containerVida').setOrigin(0, 0).setDepth(10);
     this.lifeContainer.displayWidth = _c.settBarraVida.widthContainer;
@@ -73,6 +87,7 @@ export default class Game extends Phaser.Scene { //es una escena
     map.createStaticLayer("Deco", tileset, 0, 0).setDepth(0).setScale(0.5);
     paredes.setCollisionBetween(0, 999); //Hacemos que todos los tiles de esta capa collisionen
     this.physics.add.collider(this.player, paredes);  // avisamos a phaser que player colisona con paredes
+    this.physics.add.collider(this.player2, paredes);
 
     //CREACION DE LAS POOLS DE BALAS           //esta el player para las colisiones                                     
     this.poolBalasSimples = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBSimples.cantidadPool, 'disparosimple', _c.settBSimples.velocidad, _c.settBSimples.aceleracion, _c.settBSimples.rebotes, _c.settBSimples.cadencia, _c.settBSimples.daño); //crea la pool de todos las balas simples
@@ -81,14 +96,26 @@ export default class Game extends Phaser.Scene { //es una escena
     this.poolBalasRebotador = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRebot.cantidadPool, 'rebotador', _c.settBRebot.velocidad, _c.settBRebot.aceleracion, _c.settBRebot.rebotes, _c.settBRebot.cadencia, _c.settBRebot.daño);
     ////////////////////////////////////////scena,paredes,     player ,  sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño, rango
 
-  }//inicializa todo                     
+
+    this.socket.on("updateP2", datos => {
+      let angle2 = (Phaser.Math.Angle.Between(datos.cursor.x + 10, datos.cursor.y + 10, this.player2.x, this.player2.y) + Math.PI / 2);  //es 10 del tamaño del cursor
+      this.barrel2.rotation = angle2;
+      this.player2.body.setVelocityY(datos.velocidad.y);
+      this.player2.body.setVelocityX(datos.velocidad.x);
+      this.tank2.angle = datos.angulo;
+    });
+
+    this.socket.on("disparoP2", datos => {
+      this.spawnBala(datos.x, datos.y, datos.arma, true, datos.destino);
+    })
+
+
+  }//inicializa todo
 
   update() {
     if (this.shootContainer.displayWidth > this.shootBar.displayWidth + _c.settBarraRech.margenWidth) {
       this.shootBar.displayWidth += this.speedRecharge;
     }
-
-
 
     //habria que meter hasta la linea 120 en un metodo pero ahora me voy a comer
     this.balasSimples = [];
@@ -106,6 +133,9 @@ export default class Game extends Phaser.Scene { //es una escena
       posJ1: { x: this.player.x, y: this.player.y },
       rotJ1: this.tank.angle,
       rotCanJ1: this.barrel.angle,
+      posJ2: { x: this.player2.x, y: this.player2.y },
+      rotJ2: this.tank2.angle,
+      rotCanJ2: this.barrel2.angle,
       balasSimple: this.balasSimples,
       balasRafagas: this.balasRafagas,
       balasRebotadoras: this.balasRebotadoras,
@@ -118,11 +148,21 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   //se ha disparado y segun el arma se llama a la pool adecuada
-  spawnBala = function (x, y, arma) {
-    if (arma == 'disparoSimple') this.poolBalasSimples.shoot(x, y);
-    else if (arma == 'rafagas') this.poolBalasRafagas.shoot(x, y);
-    else if (arma == 'rebotador') this.poolBalasRebotador.shoot(x, y);
-    else if (arma == 'mortero') this.poolBalasMortero.shoot(x, y);
+  spawnBala = function (x, y, arma, J2, destino) {
+    if (!J2) {
+      if (arma == 'disparoSimple') this.poolBalasSimples.shoot(x, y, this.pointer.worldX, this.pointer.worldY);
+      else if (arma == 'rafagas') this.poolBalasRafagas.shoot(x, y, this.pointer.worldX, this.pointer.worldY);
+      else if (arma == 'rebotador') this.poolBalasRebotador.shoot(x, y, this.pointer.worldX, this.pointer.worldY);
+      else if (arma == 'mortero') this.poolBalasMortero.shoot(x, y, this.pointer.worldX, this.pointer.worldY);
+    }
+    else {
+      if (arma == 'disparoSimple') this.poolBalasSimples.spawn(x, y, destino.x, destino.y);
+      else if (arma == 'rafagas') this.poolBalasRafagas.spawn(x, y, destino.x, destino.y);
+      else if (arma == 'rebotador') this.poolBalasRebotador.spawn(x, y, destino.x, destino.y);
+      else if (arma == 'mortero') this.poolBalasMortero.spawn(x, y, destino.x, destino.y);
+    }
+
+
   }
 
   //devuelve la posicion del jugador
