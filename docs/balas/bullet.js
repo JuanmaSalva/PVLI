@@ -1,9 +1,11 @@
+import * as _c from '../constantes.js'
 export default class Bullet extends Phaser.GameObjects.Sprite { //es un gameobject
     constructor(scene, imag) { //imag es el sprite que se va a cargar
         super(scene, 0, 0, imag); //llama al constructor de la clase por encima
         this.scene.add.existing(this); //le dice a la scene Game que existe
         this.scene.physics.add.existing(this); //le otorga presencia fisica
         this.body.setCollideWorldBounds(); //colisiona con los bordes de la partida
+        this.body.setCircle(_c.settBalasGeneral.radioHitboxBalasOrdinaria, -_c.settBalasGeneral.offsetHitboxBalasOrdinarias.x, -_c.settBalasGeneral.offsetHitboxBalasOrdinarias.y);
         this.setScale(1.5);
         this.body.setBounce(1,1);
     }

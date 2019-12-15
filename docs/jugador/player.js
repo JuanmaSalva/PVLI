@@ -7,20 +7,15 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.scene.physics.add.existing(this); //le otorga presencia fisica
     this.body.setCollideWorldBounds(); //colisiona con los bordes de la partida
     this.body.setCircle(_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox);
+    this.body.immovable = true;
     this._maxSpeed = _c.settPlayer.velocidadMax;
     this.speed = this._maxSpeed;
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.scena = scene;
-    this._maxLife = _c.settPlayer.vidaMax;
-    this.life = this._maxLife;
 
     this.armaPrincipal;
     this.armaSecundaria;
     this.armaSeleccionada = true;//true=principal, false=secundaria
-
-    this.u = scene.input.keyboard.addKey('U'); //teclas provisionales para la vida en ui
-    this.j = scene.input.keyboard.addKey('J');
-    this.k = scene.input.keyboard.addKey('K');
 
     this.w = scene.input.keyboard.addKey('W');
     this.a = scene.input.keyboard.addKey('A');
@@ -28,24 +23,7 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.d = scene.input.keyboard.addKey('D');
     this.q = scene.input.keyboard.addKey('Q');
 
-
-    this.dealDmg = function (damage) { //metodo en el que recibes daño
-      this.life -= damage;
-
-      if (this.life >= 0) {
-        console.log('Vida: ' + this.life);
-      } else {
-        this.life = 0;
-        console.log('Murio wey');
-      }
-    }
-    this.revive = function () { //se revive al juegador
-      this.life = this._maxLife;
-      console.log('1up');
-    }
-
-    let q = scene.input.keyboard.addKey('Q');  //boton de cambio de arma
-    q.on('down', this.cambioArma, this);
+    this.q.on('down', this.cambioArma, this);
   }
 
   preUpdate() {
@@ -62,13 +40,6 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     } else if (this.cursors.right.isDown || this.d.isDown) {
       this.body.setVelocityX(this.speed);
     } else this.body.setVelocityX(0);
-
-
-    if (this.u.isDown) this.dealDmg(-1);//PROVISIONAL
-    else if (this.j.isDown) this.dealDmg(1);//PROVISIONAL
-    else if (this.k.isDown) this.revive();//PROVISIONAL   
-    
-    this.scena.lifeBar.displayWidth = this.life*_c.settBarraVida.escalaBarraA_Vida;
   }
 
   spawnBala = function (arma) {

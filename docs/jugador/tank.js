@@ -3,7 +3,6 @@ export default class Tank extends Phaser.GameObjects.Sprite {
     super(scene, 0, -1, imag);
     this.scene.add.existing(this); //le dice a la scene Game que existe        
     this.parent = parent;
-    let angleObj, dir, oldAngle = 0;
   }
 
   preUpdate() {
