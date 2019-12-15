@@ -89,7 +89,7 @@ export default class Pool extends Phaser.GameObjects.Container {
 
                 this.entitiesAlive.splice(i,1); //elimina esa bala del array
     
-                this._group.children[i].x = this._group.children[i].y = 50;
+                this._group.children[i].x = this._group.children[i].y = _c.settBalasGeneral.posicionBalasDesactivadas;
                 this._group.children[i].body.velocity.x = this._group.children[i].body.velocity.y = 0;
     
                 if(isMortero) this._group.children[i].direccion = BulletMortero.prototype.direccion; //si no se pone esto la funcion de direccion deja de funcionar

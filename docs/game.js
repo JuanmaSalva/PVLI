@@ -14,10 +14,13 @@ export default class Game extends Phaser.Scene { //es una escena
 
   //es llamado cuando esta escne se carga
   init(data) {
+    
     this.playerData = data; //la informacion de las armas seleccionadas
     this.iconoArmaPrincipal = this.add.image(32, 608, data.principal).setScale(0.7).setDepth(10);;
     this.iconoArmaSecundaria = this.add.image(85, 618, data.secundaria).setScale(0.45).setDepth(10);;
     this.socket = data.soc;
+    this.numPlayer = data.numPlayer;
+    this.socket.off('disparoJ2');
   }
 
   preload() {
@@ -94,10 +97,10 @@ export default class Game extends Phaser.Scene { //es una escena
     this.physics.add.collider(this.player2, paredes);
 
     //CREACION DE LAS POOLS DE BALAS           //esta el player para las colisiones                                     
-    this.poolBalasSimples = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBSimples.cantidadPool, 'disparosimple', _c.settBSimples.velocidad, _c.settBSimples.aceleracion, _c.settBSimples.rebotes, _c.settBSimples.cadencia, _c.settBSimples.daño,null, this.player2); //crea la pool de todos las balas simples
+    this.poolBalasSimples = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBSimples.cantidadPool, 'disparosimple', _c.settBSimples.velocidad, _c.settBSimples.aceleracion, _c.settBSimples.rebotes, _c.settBSimples.cadencia, _c.settBSimples.daño, null, this.player2); //crea la pool de todos las balas simples
     this.poolBalasRafagas = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRaf.cantidadPool, 'rafagas', _c.settBRaf.velocidad, _c.settBRaf.aceleracion, _c.settBRaf.rebotes, _c.settBRaf.cadencia, _c.settBRaf.daño, null, this.player2);
     this.poolBalasMortero = new PoolBalas(this, null, this.player, 'balaMortero', _c.settBMortero.cantidadPool, 'mortero', _c.settBMortero.velocidad, _c.settBMortero.aceleracion, _c.settBMortero.rebotes, _c.settBMortero.cadencia, _c.settBMortero.daño, _c.settBMortero.rango);
-    this.poolBalasRebotador = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRebot.cantidadPool, 'rebotador', _c.settBRebot.velocidad, _c.settBRebot.aceleracion, _c.settBRebot.rebotes, _c.settBRebot.cadencia, _c.settBRebot.daño,null, this.player2);
+    this.poolBalasRebotador = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRebot.cantidadPool, 'rebotador', _c.settBRebot.velocidad, _c.settBRebot.aceleracion, _c.settBRebot.rebotes, _c.settBRebot.cadencia, _c.settBRebot.daño, null, this.player2);
     ////////////////////////////////////////scena,paredes,     player ,  sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño, rango
 
 
@@ -109,10 +112,18 @@ export default class Game extends Phaser.Scene { //es una escena
       this.tank2.angle = datos.angulo;
     });
 
-    this.socket.on("disparoP2", datos => {
+    this.socket.on("disparoJ2", datos => {      
+    console.log("Llamate solo una vez hijo de putaaa");
       this.spawnBala(datos.x, datos.y, datos.arma, true, datos.destino);
     })
 
+
+    this.socket.on('finDeJuego', () => {
+      this.lifePlayer2 = _c.settPlayer.vidaMax;
+      this.lifePlayer1 = _c.settPlayer.vidaMax;
+      this.socket.off('disparoJ2');
+      this.scene.start('victoria');      
+    })
 
   }//inicializa todo
 
@@ -207,30 +218,25 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   dealDmg = function (damage, player) { //metodo en el que recibes daño
-
     if (player == 1) {
-
       this.lifePlayer1 -= damage;
 
-      if (this.lifePlayer1 >= 0) {
-        console.log('Vida1 : ' + this.lifePlayer1);
-      } else {
-        this.lifePlayer1 = 0;
-        console.log('Murio 1 wey');
+      if (this.lifePlayer1 <= 0) {
+        this.lifePlayer2 = _c.settPlayer.vidaMax;
+        this.lifePlayer1 = _c.settPlayer.vidaMax;
+        this.socket.emit('finDeJuego', 0)
+        this.socket.off('disparoJ2');
+        this.scene.start('derrota');
       }
-      return this.lifePlayer1;
-
-    } else {
-
+    }
+    else {
       this.lifePlayer2 -= damage;
 
-      if (this.lifePlayer2 >= 0) {
-        console.log('Vida2 : ' + this.lifePlayer2);
-      } else {
-        this.lifePlayer2 = 0;
-        console.log('Murio 2 wey');
+      if (this.lifePlayer2 <= 0) {
+        this.lifePlayer2 = _c.settPlayer.vidaMax;
+        this.lifePlayer1 = _c.settPlayer.vidaMax;
+        this.socket.emit('finDeJuego', 1);
       }
-      return this.lifePlayer2;
     }
   }
 
@@ -238,8 +244,4 @@ export default class Game extends Phaser.Scene { //es una escena
     this.lifePlayer1 = _c.settPlayer.vidaMax;
     console.log('1up');
   }
-
 }
-
-
-
