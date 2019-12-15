@@ -57,6 +57,10 @@ io.on('connection', socket => {
   }
 
 
+  socket.on('numeroDeJugadores', numJugador => {
+      clients[numJugador].emit('numeroDeJugadores', clients.length);
+  })
+
 
   this.jugadoresEsperando = { jugador1: false, jugador2: false }
   socket.on('empezar', numJugador => { //cuando se le da a empezar partida
