@@ -19,7 +19,7 @@ export default class Game extends Phaser.Scene { //es una escena
   preload() {
     this.load.image('tank', 'assets/redTank.png');
     this.load.image('redBarrel1', 'assets/redBarrel.png');
-    this.load.tilemapTiledJSON('tilemap', 'assets/jsonMapDef1.json');
+    this.load.tilemapTiledJSON('tilemap', 'assets/jsonMapMultijug1.json');
     this.load.image('patronesTilemap', 'assets/tilesDibujitosV2.png');
     this.load.image('bala1', 'assets/bala1.png');
     this.load.image('balaMortero', 'assets/balaMortero.png')
