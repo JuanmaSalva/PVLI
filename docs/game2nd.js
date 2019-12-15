@@ -51,8 +51,8 @@ export default class Game extends Phaser.Scene { //es una escena
       if (this.arma !== 'mortero' && this.arma != 'rafagas') this.disparar();
       else if (this.arma === 'rafagas') {
         this.disparar();
-        this.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.disparar, [], this);
-        this.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.disparar, [], this);
+        this.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.shoot, [], this);
+        this.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.shoot, [], this);
       }
     })
 
@@ -123,7 +123,7 @@ export default class Game extends Phaser.Scene { //es una escena
       this.actualizarBalasMortero(datos);
 
       console.log(datos.lifePlayer2);
-      this.lifeBar.displayWidth = datos.lifePlayer2 * _c.settBarraVida.escalaBarraA_Vida ;    
+      this.lifeBar.displayWidth = datos.lifePlayer2 * _c.settBarraVida.escalaBarraA_Vida;
     })
 
     this.socket.on("explosion", datos => {
@@ -272,28 +272,39 @@ export default class Game extends Phaser.Scene { //es una escena
     this.iconoArmaSecundaria.setTexture(textureP.key);
   }
 
+
+  shoot = function () {
+    this.socket.emit('disparoP2', {
+      x: this.p2Canon.x,
+      y: this.p2Canon.y,
+      arma: this.arma,
+      destino: { x: this.pointer.worldX, y: this.pointer.worldY },
+    });
+  }
+
+
   disparar = function () {
-    if (this.isRecharging == false) {
-      this.socket.emit('disparoP2', {
-        x: this.p2Canon.x,
-        y: this.p2Canon.y,
-        arma: this.arma,
-        destino: { x: this.pointer.worldX, y: this.pointer.worldY },
-      });
-      this.isRecharging = true;
+    if (this.isRecharging == false) this.shoot();
+    this.isRecharging = true;
 
-      if (this.arma === "disparoSimple") this.time.delayedCall(_c.settBSimples.cadencia, this.toggleRecharging, [], this);
-      else if (this.arma === "rafagas") this.time.delayedCall(_c.settBRaf.cadencia, this.toggleRecharging, [], this);
-      else if (this.arma === "rebotador") this.time.delayedCall(_c.settBRebot.cadencia, this.toggleRecharging, [], this);
-      else if (this.arma === "mortero") this.time.delayedCall(_c.settBMortero.cadencia, this.toggleRecharging, [], this);
-
-      if (this.arma === "disparoSimple") this.triggerRechargeUI(_c.settBSimples.cadencia);
-      else if (this.arma === "rafagas") this.triggerRechargeUI(_c.settBRaf.cadencia);
-      else if (this.arma === "rebotador") this.triggerRechargeUI(_c.settBRebot.cadencia);
-      else if (this.arma === "mortero") this.triggerRechargeUI(_c.settBMortero.cadencia);
-
+    if (this.arma === "disparoSimple") {
+      this.time.delayedCall(_c.settBSimples.cadencia, this.toggleRecharging, [], this);
+      this.triggerRechargeUI(_c.settBSimples.cadencia);
+    }
+    else if (this.arma === "rafagas") {
+      this.time.delayedCall(_c.settBRaf.cadencia, this.toggleRecharging, [], this);
+      this.triggerRechargeUI(_c.settBRaf.cadencia);
+    }
+    else if (this.arma === "rebotador") {
+      this.time.delayedCall(_c.settBRebot.cadencia, this.toggleRecharging, [], this);
+      this.triggerRechargeUI(_c.settBRebot.cadencia);
+    }
+    else if (this.arma === "mortero") {
+      this.time.delayedCall(_c.settBMortero.cadencia, this.toggleRecharging, [], this);
+      this.triggerRechargeUI(_c.settBMortero.cadencia);
     }
   }
+
 
   toggleRecharging = function () {
     this.isShootable = true;
