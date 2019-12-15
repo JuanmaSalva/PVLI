@@ -58,7 +58,7 @@ export default class MenuArmas extends Phaser.Scene {
         this.boton.on('pointerdown', pointer => {
             if (this.armaPrincipalSeleccionada != "" && this.armaSecundariaSeleccionada != "") {
                 this.socket.emit("empezar", this.numPlayer); //avisa al server de que hay un juegador esprando
-
+            
                 this.socket.on('respuestaJugadoresEsperando', comienzo => {
                     if (comienzo) {
                         if (this.numPlayer == 0) this.scene.start('main', { principal: this.armaPrincipalSeleccionada, secundaria: this.armaSecundariaSeleccionada, soc: this.socket, numPlayer: this.numPlayer });

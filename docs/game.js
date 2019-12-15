@@ -14,11 +14,13 @@ export default class Game extends Phaser.Scene { //es una escena
 
   //es llamado cuando esta escne se carga
   init(data) {
+    
     this.playerData = data; //la informacion de las armas seleccionadas
     this.iconoArmaPrincipal = this.add.image(32, 608, data.principal).setScale(0.7).setDepth(10);;
     this.iconoArmaSecundaria = this.add.image(85, 618, data.secundaria).setScale(0.45).setDepth(10);;
     this.socket = data.soc;
     this.numPlayer = data.numPlayer;
+    this.socket.off('disparoJ2');
   }
 
   preload() {
@@ -111,7 +113,7 @@ export default class Game extends Phaser.Scene { //es una escena
     });
 
     this.socket.on("disparoJ2", datos => {      
-    console.log("bala");
+    console.log("Llamate solo una vez hijo de putaaa");
       this.spawnBala(datos.x, datos.y, datos.arma, true, datos.destino);
     })
 
@@ -119,7 +121,8 @@ export default class Game extends Phaser.Scene { //es una escena
     this.socket.on('finDeJuego', () => {
       this.lifePlayer2 = _c.settPlayer.vidaMax;
       this.lifePlayer1 = _c.settPlayer.vidaMax;
-      this.scene.start('victoria');
+      this.socket.off('disparoJ2');
+      this.scene.start('victoria');      
     })
 
   }//inicializa todo
@@ -215,8 +218,6 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   dealDmg = function (damage, player) { //metodo en el que recibes daño
-    
-    console.log("daño");
     if (player == 1) {
       this.lifePlayer1 -= damage;
 
@@ -224,6 +225,7 @@ export default class Game extends Phaser.Scene { //es una escena
         this.lifePlayer2 = _c.settPlayer.vidaMax;
         this.lifePlayer1 = _c.settPlayer.vidaMax;
         this.socket.emit('finDeJuego', 0)
+        this.socket.off('disparoJ2');
         this.scene.start('derrota');
       }
     }
