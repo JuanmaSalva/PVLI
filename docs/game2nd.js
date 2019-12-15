@@ -47,12 +47,14 @@ export default class Game extends Phaser.Scene { //es una escena
     this.lifeBar = this.add.image(_c.settBarraVida.posicionBarra.x, _c.settBarraVida.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9);
     this.lifeBar.displayWidth = _c.settBarraVida.widthContainer;
 
-    this.input.on('pointerdown', pointer => { //creacion del evento de cuando se suelta el clic
+    this.input.on('pointerdown', () => { //creacion del evento de cuando se suelta el clic
       if (this.arma !== 'mortero' && this.arma != 'rafagas') this.disparar();
       else if (this.arma === 'rafagas') {
-        this.disparar();
-        this.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.shoot, [], this);
-        this.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.shoot, [], this);
+        if (!this.isRecharging) {
+          this.disparar();
+          this.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.shoot, [], this);
+          this.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.shoot, [], this);
+        }
       }
     })
 
@@ -145,7 +147,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.isRecharging = false;
 
     this.socket.on('finDeJuego', ganado => {
-      if(ganado)this.scene.start('victoria');
+      if (ganado) this.scene.start('victoria');
       else this.scene.start('derrota');
     })
   }
@@ -289,10 +291,9 @@ export default class Game extends Phaser.Scene { //es una escena
 
 
   disparar = function () {
-    if (this.isRecharging === false) {
+    if (!this.isRecharging) {
       this.shoot();
-
-
+      this.isRecharging = true;
       if (this.arma === "disparoSimple") {
         this.time.delayedCall(_c.settBSimples.cadencia, this.toggleRecharging, [], this);
         this.triggerRechargeUI(_c.settBSimples.cadencia);
@@ -311,7 +312,6 @@ export default class Game extends Phaser.Scene { //es una escena
       }
 
     }
-    this.isRecharging = true;
 
   }
 
