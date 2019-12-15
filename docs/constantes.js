@@ -48,7 +48,7 @@ export const settBarraRech = {
 //-----------
 
 export const settBalasGeneral = {
-    posicionBalasDesactivadas: { x: 50, y: 50 },
+    posicionBalasDesactivadas: { x: -50, y: -50 },
     radioHitboxBalasOrdinaria: 2,
     offsetHitboxBalasOrdinarias: {x:0, y:-3},
 }

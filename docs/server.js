@@ -96,8 +96,21 @@ io.on('connection', socket => {
   });
 
   socket.on('disparoP2', data => {
-    clients[0].emit('disparoP2', data);
+    clients[0].emit('disparoJ2', data);
   });
+
+
+  socket.on('finDeJuego', perdedor => {
+    this.jugadoresEsperando = { jugador1: false, jugador2: false }
+
+    console.log('Perdedor: ' + perdedor);
+
+    if(perdedor == 0) clients[1].emit('finDeJuego', true);
+    else {
+      clients[0].emit('finDeJuego');
+      clients[1].emit('finDeJuego', false);
+    }
+  })
 
 
   socket.on('disconnect', () => {
