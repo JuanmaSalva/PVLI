@@ -6,7 +6,7 @@ import BulletMortero from './mortero.js'
 import * as _c from '../constantes.js'
 
 export default class Pool extends Phaser.GameObjects.Container {
-    constructor(scene, paredes,player,imag, numElementosPool, arma, velocidad, aceleracion, numrebotes, cad, daño, rango) {
+    constructor(scene, paredes,player,imag, numElementosPool, arma, velocidad, aceleracion, numrebotes, cad, daño, rango, player2) {
         super(scene); //llama al constructor de la clase por encima
         this.scena = scene;
 
@@ -14,9 +14,9 @@ export default class Pool extends Phaser.GameObjects.Container {
         let entities = []; //vector de balas
         this.entitiesAlive = [];
         for (let i = 0; i < numElementosPool; i++) {
-            if (arma === 'disparosimple') entities.push(new BulletSimple(scene, imag, velocidad, numrebotes, paredes, this, daño, player)); //creacion de las balas
-            else if (arma === 'rafagas') entities.push(new BulletRafaga(scene, imag, velocidad, numrebotes, paredes, this, daño, player)); //creacion de las balas
-            else if (arma === 'rebotador') entities.push(new BulletRebotador(scene, imag, velocidad, numrebotes, paredes, this, aceleracion, daño, player)); //creacion de las balas
+            if (arma === 'disparosimple') entities.push(new BulletSimple(scene, imag, velocidad, numrebotes, paredes, this, daño, player, player2)); //creacion de las balas
+            else if (arma === 'rafagas') entities.push(new BulletRafaga(scene, imag, velocidad, numrebotes, paredes, this, daño, player, player2)); //creacion de las balas
+            else if (arma === 'rebotador') entities.push(new BulletRebotador(scene, imag, velocidad, numrebotes, paredes, this, aceleracion, daño, player, player2)); //creacion de las balas
             else if (arma === 'mortero') entities.push(new BulletMortero(scene, imag, velocidad, this, daño, rango)); //creacion de las balas
 
             entities[i].x = _c.settBalasGeneral.posicionBalasDesactivadas.x;
@@ -66,8 +66,8 @@ export default class Pool extends Phaser.GameObjects.Container {
             this.isShootable = false; //no puede dispara
             
             if (this.arma == "rafagas") {
-                this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.rafaga, [], this)
-                this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.rafaga, [], this)
+                this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas, this.rafaga, [], this);
+                this.scena.time.delayedCall(_c.settBRaf.tiempoEntreBalas * 2, this.rafaga, [], this);
             }
     
             if (!this.scena.recharging) {

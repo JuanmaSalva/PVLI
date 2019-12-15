@@ -49,6 +49,8 @@ export const settBarraRech = {
 
 export const settBalasGeneral = {
     posicionBalasDesactivadas: { x: 50, y: 50 },
+    radioHitboxBalasOrdinaria: 2,
+    offsetHitboxBalasOrdinarias: {x:0, y:-3},
 }
 
 export const settBSimples = {
@@ -97,4 +99,6 @@ export const settBMortero = {
     anchoCirculoRango: 2, //pixeles
     colorCirculoRango: 0xff0000,
     variabilidadRadioCirculo : 0, //pixeles
+
+    radioHitboxExplosion : 23,
 }

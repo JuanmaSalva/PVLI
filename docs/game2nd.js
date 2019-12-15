@@ -40,7 +40,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.shootContainer.displayWidth = _c.settBarraRech.widthContainer;
     this.shootBar = this.add.image(_c.settBarraRech.posicionBarra.x, _c.settBarraRech.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9).setAngle(90).setTint(0x26ff00);
     this.shootBar.displayWidth = _c.settBarraRech.widthContainer - 11;
-    this.speedRecharge = 0;
+    this.speedRechargeP2 = 0;
 
     this.lifeContainer = this.add.image(_c.settBarraVida.posicionContainer.x, _c.settBarraVida.posicionContainer.y, 'containerVida').setOrigin(0, 0).setDepth(10);
     this.lifeContainer.displayWidth = _c.settBarraVida.widthContainer;
@@ -121,6 +121,9 @@ export default class Game extends Phaser.Scene { //es una escena
       this.actualizarBalasRafagas(datos);
       this.actualizarBalasRebotador(datos);
       this.actualizarBalasMortero(datos);
+
+      console.log(datos.lifePlayer2);
+      this.lifeBar.displayWidth = datos.lifePlayer2 * _c.settBarraVida.escalaBarraA_Vida ;    
     })
 
     this.socket.on("explosion", datos => {
@@ -144,36 +147,41 @@ export default class Game extends Phaser.Scene { //es una escena
 
   update() {
 
+    let vel;
     let velX = 0;
     let velY = 0;
 
     this.dir = 0;
     this.angleObj = 0;
 
-    /*if ((this.s.isDown || this.w.isDown) && (this.s.isDown || this.w.isDown)) vel = this._maxSpeed * 71 / 100;
-    else vel = this._maxSpeed;*/
+    if ((this.s.isDown || this.w.isDown) && (this.a.isDown || this.d.isDown)) vel = this._maxSpeed * 71 / 100;
+    else vel = this._maxSpeed;
     if (this.w.isDown) {
-      velY = -this._maxSpeed;
+      velY = -vel;
       this.angleObj += this.oldAngle = 0;
       this.dir += 1;
     } else if (this.s.isDown) {
-      velY = this._maxSpeed;
+      velY = vel;
       this.angleObj += this.oldAngle = 180;
       this.dir += 1;
     }
 
     if (this.a.isDown) {
-      velX = -this._maxSpeed;
+      velX = -vel;
       this.angleObj += this.oldAngle = 270;
       this.dir += 1;
     } else if (this.d.isDown) {
-      velX = this._maxSpeed;
+      velX = vel;
       this.angleObj += this.oldAngle = 90;
       this.dir += 1;
     }
 
     if (this.angle2 = this.angleObj / (this.dir || 1)) { }
     else this.angle2 = this.oldAngle || 0;
+
+    if (this.shootContainer.displayWidth > this.shootBar.displayWidth + _c.settBarraRech.margenWidth) {
+      this.shootBar.displayWidth += this.speedRechargeP2;
+    }
 
     this.socket.emit('updateP2', { //toda la info necesaria
       cursor: { x: this.pointer.worldX, y: this.pointer.worldY },
@@ -265,26 +273,39 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   disparar = function () {
-    if (this.isRecharging === false) {
+    if (this.isRecharging == false) {
       this.socket.emit('disparoP2', {
         x: this.p2Canon.x,
         y: this.p2Canon.y,
         arma: this.arma,
         destino: { x: this.pointer.worldX, y: this.pointer.worldY },
       });
-      this.toggleRecharging();
+      this.isRecharging = true;
 
-      if(this.arma==="disparoSimple")this.time.delayedCall(_c.settBSimples.cadencia, this.toggleRecharging, [], this);
-      else if(this.arma === "rafagas")this.time.delayedCall(_c.settBRaf.cadencia, this.toggleRecharging, [], this);
-      else if(this.arma === "rebotador")this.time.delayedCall(_c.settBRebot.cadencia, this.toggleRecharging, [], this);
-      else if(this.arma === "mortero")this.time.delayedCall(_c.settBMortero.cadencia, this.toggleRecharging, [], this);
+      if (this.arma === "disparoSimple") this.time.delayedCall(_c.settBSimples.cadencia, this.toggleRecharging, [], this);
+      else if (this.arma === "rafagas") this.time.delayedCall(_c.settBRaf.cadencia, this.toggleRecharging, [], this);
+      else if (this.arma === "rebotador") this.time.delayedCall(_c.settBRebot.cadencia, this.toggleRecharging, [], this);
+      else if (this.arma === "mortero") this.time.delayedCall(_c.settBMortero.cadencia, this.toggleRecharging, [], this);
 
-      
+      if (this.arma === "disparoSimple") this.triggerRechargeUI(_c.settBSimples.cadencia);
+      else if (this.arma === "rafagas") this.triggerRechargeUI(_c.settBRaf.cadencia);
+      else if (this.arma === "rebotador") this.triggerRechargeUI(_c.settBRebot.cadencia);
+      else if (this.arma === "mortero") this.triggerRechargeUI(_c.settBMortero.cadencia);
+
     }
   }
 
   toggleRecharging = function () {
-    this.isRecharging = !this.isRecharging;
+    this.isShootable = true;
+    this.isRecharging = false;
+    this.shootBar.setTint(_c.settBarraRech.colorBarraNormal);
+  };
+
+  triggerRechargeUI = function (time) {
+    this.shootBar.displayWidth = 0;
+    this.speedRechargeP2 = _c.settBarraRech.velocidadUIRecarga / time;
+    this.shootBar.setTint(_c.settBarraRech.colorBarraCharged);
   }
+
 }
 

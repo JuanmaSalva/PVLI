@@ -47,6 +47,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.player2 = this.add.container(_c.settPlayer2.posicionInicial.x, _c.settPlayer2.posicionInicial.y);
     this.physics.add.existing(this.player2); //le otorga presencia fisica
     this.player2.body.setCollideWorldBounds().setCircle(_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox); //colisiona con los bordes de la partida
+    this.player2.body.immovable = true;
 
     this.tank2 = this.add.sprite(0, 0, 'blueTank').setOrigin(0.5, 0.5); //se crea el tanque en si
     this.barrel2 = this.add.sprite(0, 0, 'blueBarrel').setOrigin(0.5, 0);
@@ -56,6 +57,9 @@ export default class Game extends Phaser.Scene { //es una escena
 
     this.player2.add(this.tank2);
     this.player2.add(this.barrel2); //se les añade al container player
+
+    this.lifePlayer1 = _c.settPlayer.vidaMax;
+    this.lifePlayer2 = _c.settPlayer2.vidaMax;
 
     this.lifeContainer = this.add.image(_c.settBarraVida.posicionContainer.x, _c.settBarraVida.posicionContainer.y, 'containerVida').setOrigin(0, 0).setDepth(10);
     this.lifeContainer.displayWidth = _c.settBarraVida.widthContainer;
@@ -67,7 +71,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.shootContainer.displayWidth = _c.settBarraRech.widthContainer;
     this.shootBar = this.add.image(_c.settBarraRech.posicionBarra.x, _c.settBarraRech.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9).setAngle(90).setTint(0x26ff00);
     this.shootBar.displayWidth = _c.settBarraRech.widthContainer - _c.settBarraRech.margenWidth;
-    this.speedRecharge = 0;
+    this.speedRechargeP1 = 0;
 
     this.isShootable = true;
     this.recharging = false; //empiezan del reves por q si no cuendo cambias de escene dispara ya de una
@@ -90,10 +94,10 @@ export default class Game extends Phaser.Scene { //es una escena
     this.physics.add.collider(this.player2, paredes);
 
     //CREACION DE LAS POOLS DE BALAS           //esta el player para las colisiones                                     
-    this.poolBalasSimples = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBSimples.cantidadPool, 'disparosimple', _c.settBSimples.velocidad, _c.settBSimples.aceleracion, _c.settBSimples.rebotes, _c.settBSimples.cadencia, _c.settBSimples.daño); //crea la pool de todos las balas simples
-    this.poolBalasRafagas = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRaf.cantidadPool, 'rafagas', _c.settBRaf.velocidad, _c.settBRaf.aceleracion, _c.settBRaf.rebotes, _c.settBRaf.cadencia, _c.settBRaf.daño);
+    this.poolBalasSimples = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBSimples.cantidadPool, 'disparosimple', _c.settBSimples.velocidad, _c.settBSimples.aceleracion, _c.settBSimples.rebotes, _c.settBSimples.cadencia, _c.settBSimples.daño,null, this.player2); //crea la pool de todos las balas simples
+    this.poolBalasRafagas = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRaf.cantidadPool, 'rafagas', _c.settBRaf.velocidad, _c.settBRaf.aceleracion, _c.settBRaf.rebotes, _c.settBRaf.cadencia, _c.settBRaf.daño, null, this.player2);
     this.poolBalasMortero = new PoolBalas(this, null, this.player, 'balaMortero', _c.settBMortero.cantidadPool, 'mortero', _c.settBMortero.velocidad, _c.settBMortero.aceleracion, _c.settBMortero.rebotes, _c.settBMortero.cadencia, _c.settBMortero.daño, _c.settBMortero.rango);
-    this.poolBalasRebotador = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRebot.cantidadPool, 'rebotador', _c.settBRebot.velocidad, _c.settBRebot.aceleracion, _c.settBRebot.rebotes, _c.settBRebot.cadencia, _c.settBRebot.daño);
+    this.poolBalasRebotador = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRebot.cantidadPool, 'rebotador', _c.settBRebot.velocidad, _c.settBRebot.aceleracion, _c.settBRebot.rebotes, _c.settBRebot.cadencia, _c.settBRebot.daño,null, this.player2);
     ////////////////////////////////////////scena,paredes,     player ,  sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño, rango
 
 
@@ -114,8 +118,11 @@ export default class Game extends Phaser.Scene { //es una escena
 
   update() {
     if (this.shootContainer.displayWidth > this.shootBar.displayWidth + _c.settBarraRech.margenWidth) {
-      this.shootBar.displayWidth += this.speedRecharge;
+      this.shootBar.displayWidth += this.speedRechargeP1;
     }
+
+    //vida del jugador
+    this.lifeBar.displayWidth = this.lifePlayer1 * _c.settBarraVida.escalaBarraA_Vida;//- _c.settBarraVida.margenWidth;
 
     //habria que meter hasta la linea 120 en un metodo pero ahora me voy a comer
     this.balasSimples = [];
@@ -140,6 +147,7 @@ export default class Game extends Phaser.Scene { //es una escena
       balasRafagas: this.balasRafagas,
       balasRebotadoras: this.balasRebotadoras,
       balasMortero: this.balasMortero,
+      lifePlayer2: this.lifePlayer2,
     })
   }
 
@@ -162,7 +170,6 @@ export default class Game extends Phaser.Scene { //es una escena
       else if (arma == 'mortero') this.poolBalasMortero.spawn(x, y, destino.x, destino.y);
     }
 
-
   }
 
   //devuelve la posicion del jugador
@@ -177,7 +184,7 @@ export default class Game extends Phaser.Scene { //es una escena
       y: y,
     })
 
-    new ExplosionAnim(this, x, y, 'animacion', this.player); //crea la animacion de la explosion en el lugar dado
+    new ExplosionAnim(this, x, y, 'animacion', this.player, this.player2); //crea la animacion de la explosion en el lugar dado
   }
 
   cambiarIconosArmas() {
@@ -186,11 +193,10 @@ export default class Game extends Phaser.Scene { //es una escena
     this.iconoArmaSecundaria.setTexture(textureP.key);
   }
 
-
   //se llama al disparar y resetea la barra de recarga
   triggerRechargeUI = function (time) {
     this.shootBar.displayWidth = 0;
-    this.speedRecharge = _c.settBarraRech.velocidadUIRecarga / time;
+    this.speedRechargeP1 = _c.settBarraRech.velocidadUIRecarga / time;
     this.shootBar.setTint(_c.settBarraRech.colorBarraCharged);
   }
 
@@ -199,4 +205,41 @@ export default class Game extends Phaser.Scene { //es una escena
     this.recharging = false;
     this.shootBar.setTint(_c.settBarraRech.colorBarraNormal);
   }
+
+  dealDmg = function (damage, player) { //metodo en el que recibes daño
+
+    if (player == 1) {
+
+      this.lifePlayer1 -= damage;
+
+      if (this.lifePlayer1 >= 0) {
+        console.log('Vida1 : ' + this.lifePlayer1);
+      } else {
+        this.lifePlayer1 = 0;
+        console.log('Murio 1 wey');
+      }
+      return this.lifePlayer1;
+
+    } else {
+
+      this.lifePlayer2 -= damage;
+
+      if (this.lifePlayer2 >= 0) {
+        console.log('Vida2 : ' + this.lifePlayer2);
+      } else {
+        this.lifePlayer2 = 0;
+        console.log('Murio 2 wey');
+      }
+      return this.lifePlayer2;
+    }
+  }
+
+  revive = function () { //se revive al juegador
+    this.lifePlayer1 = _c.settPlayer.vidaMax;
+    console.log('1up');
+  }
+
 }
+
+
+

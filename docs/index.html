@@ -55,7 +55,7 @@
                     autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
                 },
                 scene: [Menu, Game, MenuArmas],
-                physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
+                physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: true } }
             };
             let game = new Phaser.Game(config);
             game.scene.start('menu', {s:socket,numP:numPlayer});
