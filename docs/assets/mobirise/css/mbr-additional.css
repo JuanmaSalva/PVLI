@@ -11,11 +11,11 @@ body {
 }
 .display-1 {
   font-family: 'Alfa Slab One', display;
-  font-size: 4.25rem;
+  font-size: 4.8rem;
   font-display: swap;
 }
 .display-1 > .mbr-iconfont {
-  font-size: 6.8rem;
+  font-size: 7.68rem;
 }
 .display-2 {
   font-family: 'Alfa Slab One', display;
@@ -35,19 +35,19 @@ body {
 }
 .display-5 {
   font-family: 'Alegreya Sans SC', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-display: swap;
 }
 .display-5 > .mbr-iconfont {
-  font-size: 2.4rem;
+  font-size: 2.88rem;
 }
 .display-7 {
   font-family: 'Alegreya Sans SC', sans-serif;
-  font-size: 1rem;
+  font-size: 1.4rem;
   font-display: swap;
 }
 .display-7 > .mbr-iconfont {
-  font-size: 1.6rem;
+  font-size: 2.24rem;
 }
 /* ---- Fluid typography for mobile devices ---- */
 /* 1.4 - font scale ratio ( bootstrap == 1.42857 ) */
@@ -56,9 +56,9 @@ body {
 /* 0.65 - min scale variable, may vary */
 @media (max-width: 768px) {
   .display-1 {
-    font-size: 3.4rem;
-    font-size: calc( 2.1374999999999997rem + (4.25 - 2.1374999999999997) * ((100vw - 20rem) / (48 - 20)));
-    line-height: calc( 1.4 * (2.1374999999999997rem + (4.25 - 2.1374999999999997) * ((100vw - 20rem) / (48 - 20))));
+    font-size: 3.84rem;
+    font-size: calc( 2.33rem + (4.8 - 2.33) * ((100vw - 20rem) / (48 - 20)));
+    line-height: calc( 1.4 * (2.33rem + (4.8 - 2.33) * ((100vw - 20rem) / (48 - 20))));
   }
   .display-2 {
     font-size: 1.76rem;
@@ -71,9 +71,9 @@ body {
     line-height: calc( 1.4 * (1rem + (1 - 1) * ((100vw - 20rem) / (48 - 20))));
   }
   .display-5 {
-    font-size: 1.2rem;
-    font-size: calc( 1.175rem + (1.5 - 1.175) * ((100vw - 20rem) / (48 - 20)));
-    line-height: calc( 1.4 * (1.175rem + (1.5 - 1.175) * ((100vw - 20rem) / (48 - 20))));
+    font-size: 1.44rem;
+    font-size: calc( 1.28rem + (1.8 - 1.28) * ((100vw - 20rem) / (48 - 20)));
+    line-height: calc( 1.4 * (1.28rem + (1.8 - 1.28) * ((100vw - 20rem) / (48 - 20))));
   }
 }
 /* Buttons */
@@ -549,11 +549,11 @@ a:hover {
 }
 .form-control {
   font-family: 'Alegreya Sans SC', sans-serif;
-  font-size: 1rem;
+  font-size: 1.4rem;
   font-display: swap;
 }
 .form-control > .mbr-iconfont {
-  font-size: 1.6rem;
+  font-size: 2.24rem;
 }
 blockquote {
   border-color: #b2ccd2;
@@ -740,8 +740,54 @@ section.lazy-placeholder:after {
 .cid-rKILr5Yru1 .mbr-section-subtitle DIV {
   text-align: left;
 }
+.cid-rKJ0S7Qvjv {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  background-image: url("../../../assets/images/fondoindex1-1-1920x1080.png");
+}
+.cid-rKJ0S7Qvjv .nav-tabs .nav-item.open .nav-link:focus,
+.cid-rKJ0S7Qvjv .nav-tabs .nav-link.active:focus {
+  outline: none;
+}
+.cid-rKJ0S7Qvjv .nav-tabs {
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  border-bottom: none;
+}
+.cid-rKJ0S7Qvjv .nav-tabs .nav-item {
+  padding: .5rem;
+}
+.cid-rKJ0S7Qvjv .nav-tabs .nav-link {
+  color: #ffffff;
+  font-style: normal;
+  font-weight: 500;
+  border: 1px solid #ffffff;
+  transition: all .5s;
+}
+.cid-rKJ0S7Qvjv .nav-tabs .nav-link:hover {
+  cursor: pointer;
+  background-color: #b1a374;
+}
+.cid-rKJ0S7Qvjv .nav-tabs .nav-link.active {
+  font-weight: 500;
+  color: #ffffff;
+  font-style: normal;
+  background-color: #b1a374;
+  border-color: #b1a374;
+}
+.cid-rKJ0S7Qvjv .nav-tabs .nav-link.active:hover {
+  background-color: #b1a374;
+}
+.cid-rKJ0S7Qvjv p {
+  color: #ffffff;
+}
+.cid-rKJ0S7Qvjv .mbr-text {
+  text-align: center;
+}
 .cid-rKILOEUaej {
-  background: #edeae1;
+  background: #c4cfa9;
   padding-top: 60px;
   padding-bottom: 60px;
 }
@@ -764,7 +810,7 @@ section.lazy-placeholder:after {
 .cid-rKIRMrFMDI {
   padding-top: 90px;
   padding-bottom: 90px;
-  background-color: #c4cfa9;
+  background-color: #edeae1;
 }
 .cid-rKIRMrFMDI .mbr-section-subtitle {
   color: #465052;
