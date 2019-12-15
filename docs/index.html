@@ -37,7 +37,8 @@
                     <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1">Tanks Showdown</h1>
 
                     <p class="mbr-text pb-3 mbr-fonts-style display-5">
-                        You have one tank. Cool. There is problem, enemy also one tank. Not cool. <br>Destroy the enemy tank
+                        You have one tank. Cool. There is problem, enemy also one tank. Not cool. <br>Destroy the enemy
+                        tank
                         to win. That's cool.&nbsp;</p>
                     <div class="mbr-section-btn"><a class="btn btn-md btn-secondary display-2"
                             href="index.html#image3-b">PLAY</a></div>
@@ -153,7 +154,7 @@
         <div class="image-block" style=" padding-top: 70px; padding-bottom: 70px; background-color: #c4cfa9;"
             id="gameDiv">
 
-            <script src="/socket.io/socket.io.js" ></script>
+            <script src="/socket.io/socket.io.js"></script>
 
             <script>
                 const direccion = 'localhost';     //TIENE QUE SER LA IP DEL SERVIDOR
@@ -174,6 +175,8 @@
                 import Menu from './menus/menu.js';
                 import MenuArmas from './menus/menuArmas.js';
                 import Game2nd from './game2nd.js'
+                import Victoria from './menus/victoria.js'
+                import Derrota from './menus/derrota.js'
 
                 let canvasJuego = document.getElementById("canvasJuego");
 
@@ -188,7 +191,7 @@
                             //mode: Phaser.Scale.FIT,
                             autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
                         },
-                        scene: [Menu, Game, MenuArmas],
+                        scene: [Menu, Game, MenuArmas, Victoria, Derrota],
                         physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
                     };
                     let game = new Phaser.Game(config);
@@ -206,7 +209,7 @@
                         scale: {
                             autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
                         },
-                        scene: [Menu, MenuArmas, Game2nd],
+                        scene: [Menu, MenuArmas, Game2nd, Victoria, Derrota],
                     };
                     let game2nd = new Phaser.Game(config); //es un juego "falso" sin fisicas ni nah
                     game2nd.scene.start('menu', { s: socket, numP: numPlayer });
@@ -353,13 +356,13 @@
                     // mode: Phaser.Scale.FIT
                     autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
                 },
-                scene: [Menu, Game, MenuArmas, Victoria,Derrota],
+                scene: [Menu, Game, MenuArmas, Victoria, Derrota],
                 physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
             };
             let game = new Phaser.Game(config);
-            game.scene.start('menu', {s:socket,numP:numPlayer});
-            
-        } 
+            game.scene.start('menu', { s: socket, numP: numPlayer });
+
+        }
         else {
             //juego falso
             var config = {
@@ -370,10 +373,10 @@
                 scale: {
                     autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
                 },
-                scene: [Menu, MenuArmas, Game2nd, Victoria,Derrota],
+                scene: [Menu, MenuArmas, Game2nd, Victoria, Derrota],
             };
             let game2nd = new Phaser.Game(config); //es un juego "falso" sin fisicas ni nah
-            game2nd.scene.start('menu', {s:socket,numP:numPlayer});      
+            game2nd.scene.start('menu', { s: socket, numP: numPlayer });
         }
 
     </script>
