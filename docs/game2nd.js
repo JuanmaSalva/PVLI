@@ -274,6 +274,7 @@ export default class Game extends Phaser.Scene { //es una escena
 
 
   shoot = function () {
+    console.log("punpum");
     this.socket.emit('disparoP2', {
       x: this.p2Canon.x,
       y: this.p2Canon.y,
@@ -284,25 +285,30 @@ export default class Game extends Phaser.Scene { //es una escena
 
 
   disparar = function () {
-    if (this.isRecharging == false) this.shoot();
+    if (this.isRecharging === false) {
+      this.shoot();
+
+
+      if (this.arma === "disparoSimple") {
+        this.time.delayedCall(_c.settBSimples.cadencia, this.toggleRecharging, [], this);
+        this.triggerRechargeUI(_c.settBSimples.cadencia);
+      }
+      else if (this.arma === "rafagas") {
+        this.time.delayedCall(_c.settBRaf.cadencia, this.toggleRecharging, [], this);
+        this.triggerRechargeUI(_c.settBRaf.cadencia);
+      }
+      else if (this.arma === "rebotador") {
+        this.time.delayedCall(_c.settBRebot.cadencia, this.toggleRecharging, [], this);
+        this.triggerRechargeUI(_c.settBRebot.cadencia);
+      }
+      else if (this.arma === "mortero") {
+        this.time.delayedCall(_c.settBMortero.cadencia, this.toggleRecharging, [], this);
+        this.triggerRechargeUI(_c.settBMortero.cadencia);
+      }
+
+    }
     this.isRecharging = true;
 
-    if (this.arma === "disparoSimple") {
-      this.time.delayedCall(_c.settBSimples.cadencia, this.toggleRecharging, [], this);
-      this.triggerRechargeUI(_c.settBSimples.cadencia);
-    }
-    else if (this.arma === "rafagas") {
-      this.time.delayedCall(_c.settBRaf.cadencia, this.toggleRecharging, [], this);
-      this.triggerRechargeUI(_c.settBRaf.cadencia);
-    }
-    else if (this.arma === "rebotador") {
-      this.time.delayedCall(_c.settBRebot.cadencia, this.toggleRecharging, [], this);
-      this.triggerRechargeUI(_c.settBRebot.cadencia);
-    }
-    else if (this.arma === "mortero") {
-      this.time.delayedCall(_c.settBMortero.cadencia, this.toggleRecharging, [], this);
-      this.triggerRechargeUI(_c.settBMortero.cadencia);
-    }
   }
 
 
