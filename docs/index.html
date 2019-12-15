@@ -39,6 +39,8 @@
         import Menu from './menus/menu.js';
         import MenuArmas from './menus/menuArmas.js';
         import Game2nd from './game2nd.js'
+        import Derrota from './menus/derrota.js';
+        import Victoria from './menus/victoria.js';
 
 
         if (numPlayer == 0) {
@@ -47,14 +49,11 @@
                 width: 896,
                 height: 640,
                 pixelArt: true,
-                input: {
-                    gamepad: true
-                },
                 scale: {
                     // mode: Phaser.Scale.FIT
                     autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
                 },
-                scene: [Menu, Game, MenuArmas],
+                scene: [Menu, Game, MenuArmas, Victoria,Derrota],
                 physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } }
             };
             let game = new Phaser.Game(config);
@@ -71,7 +70,7 @@
                 scale: {
                     autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
                 },
-                scene: [Menu, MenuArmas, Game2nd],
+                scene: [Menu, MenuArmas, Game2nd, Victoria,Derrota],
             };
             let game2nd = new Phaser.Game(config); //es un juego "falso" sin fisicas ni nah
             game2nd.scene.start('menu', {s:socket,numP:numPlayer});      

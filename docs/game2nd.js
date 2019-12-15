@@ -122,7 +122,7 @@ export default class Game extends Phaser.Scene { //es una escena
       this.actualizarBalasRebotador(datos);
       this.actualizarBalasMortero(datos);
 
-      console.log(datos.lifePlayer2);
+      if (datos.lifePlayer2 <= 0) this.scene.start('derrota');
       this.lifeBar.displayWidth = datos.lifePlayer2 * _c.settBarraVida.escalaBarraA_Vida;
     })
 
@@ -143,6 +143,11 @@ export default class Game extends Phaser.Scene { //es una escena
     this.angle2 = 0;
 
     this.isRecharging = false;
+
+    this.socket.on('finDeJuego', ganado => {
+      if(ganado)this.scene.start('victoria');
+      else this.scene.start('derrota');
+    })
   }
 
   update() {
@@ -274,7 +279,6 @@ export default class Game extends Phaser.Scene { //es una escena
 
 
   shoot = function () {
-    console.log("punpum");
     this.socket.emit('disparoP2', {
       x: this.p2Canon.x,
       y: this.p2Canon.y,

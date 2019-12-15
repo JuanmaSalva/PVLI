@@ -1,5 +1,5 @@
 export default class Menu extends Phaser.Scene {
-    constructor(t) {
+    constructor() {
         super({ key: 'menu' });
     }
 
@@ -14,10 +14,9 @@ export default class Menu extends Phaser.Scene {
     }
 
     create() {
-        this.fondo = this.add.image(448, 320, 'fondoInicio'); //fondo provisional
+        this.add.image(448, 320, 'fondoInicio'); //fondo provisional
         this.boton = this.add.image(448, 268, 'botonInicio').setInteractive().setScale(0.5);
         this.boton.on('pointerdown', pointer => { //se le ha dado a jugar
-
             this.socket.emit('numeroDeJugadores', this.numPlayer);
 
             this.socket.on('numeroDeJugadores', numero => {
