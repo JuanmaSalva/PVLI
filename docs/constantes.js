@@ -4,14 +4,14 @@
 
 export const settPlayer = {
     tamañoHitbox: 15,
-    posicionInicial: { x: 100, y: 100 },
+    posicionInicial: { x: 80, y: 320 },
     velocidadMax: 100,
     vidaMax: 100,
 };
 
 export const settPlayer2 = {
     tamañoHitbox: 15,
-    posicionInicial: { x: 150, y: 150 },
+    posicionInicial: { x: 820, y: 320 },
     velocidadMax: 100,
     vidaMax: 100,
 }

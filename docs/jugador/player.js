@@ -29,7 +29,7 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
   }
 
   preUpdate() {
-    if ((this.cursors.up.isDown || this.cursors.down.isDown || this.s.isDown || this.w.isDown) && (this.cursors.left.isDown || this.cursors.right.isDown || this.s.isDown || this.w.isDown)) this.speed = this._maxSpeed * 71 / 100;
+    if ((this.cursors.up.isDown || this.cursors.down.isDown || this.s.isDown || this.w.isDown) && (this.cursors.left.isDown || this.cursors.right.isDown || this.a.isDown || this.d.isDown)) this.speed = this._maxSpeed * 71 / 100;
     else this.speed = this._maxSpeed;
     if (this.cursors.up.isDown || this.w.isDown) {
       this.body.setVelocityY(-this.speed);
