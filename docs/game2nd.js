@@ -19,7 +19,7 @@ export default class Game extends Phaser.Scene { //es una escena
   preload() {
     this.load.image('tank', 'assets/redTank.png');
     this.load.image('redBarrel1', 'assets/redBarrel.png');
-    this.load.tilemapTiledJSON('tilemap', 'assets/jsonMapDef4.json');
+    this.load.tilemapTiledJSON('tilemap', 'assets/jsonMapDef3.json');
     this.load.image('patronesTilemap', 'assets/tilesDibujitosV2.png');
     this.load.image('bala1', 'assets/bala1.png');
     this.load.image('balaMortero', 'assets/balaMortero.png')
@@ -73,7 +73,8 @@ export default class Game extends Phaser.Scene { //es una escena
     map.createStaticLayer("Background", tileset, 0, 0).setDepth(-2).setScale(0.5); //se crea el fondo desde el tileset
     map.createStaticLayer("Walls", tileset, 0, 0).setDepth(-1).setScale(0.5);  //Capa de las paredes
     map.createStaticLayer("Deco", tileset, 0, 0).setDepth(0).setScale(0.5);
-
+    map.createStaticLayer("Deco2", tileset, 0, 0).setDepth(1).setScale(0.5);
+    
     this.p1 = this.add.sprite(100, 100, 'tank').setDepth(-2);
     this.p1Canon = this.add.sprite(100, 100, 'redBarrel1').setOrigin(0.5, 0).setDepth(-1);;
 
