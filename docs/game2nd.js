@@ -74,11 +74,11 @@ export default class Game extends Phaser.Scene { //es una escena
     map.createStaticLayer("Walls", tileset, 0, 0).setDepth(-1).setScale(0.5);  //Capa de las paredes
     map.createStaticLayer("Deco", tileset, 0, 0).setDepth(0).setScale(0.5);
 
-    this.p1 = this.add.sprite(100, 100, 'tank');
-    this.p1Canon = this.add.sprite(100, 100, 'redBarrel1').setOrigin(0.5, 0);
+    this.p1 = this.add.sprite(100, 100, 'tank').setDepth(-2);
+    this.p1Canon = this.add.sprite(100, 100, 'redBarrel1').setOrigin(0.5, 0).setDepth(-1);;
 
-    this.p2 = this.add.sprite(100, 100, 'blueTank');
-    this.p2Canon = this.add.sprite(100, 100, 'blueBarrel').setOrigin(0.5, 0);
+    this.p2 = this.add.sprite(100, 100, 'blueTank').setDepth(-2);;
+    this.p2Canon = this.add.sprite(100, 100, 'blueBarrel').setOrigin(0.5, 0).setDepth(-1);;
 
     this.poolBalasSimples = [];
     this.poolBalasRafagas = []

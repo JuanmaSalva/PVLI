@@ -38,8 +38,9 @@ app.use('/menus', express.static('menus'));
 
 
 io.on('connection', socket => {
-  console.log('a user connected');
-  clients.push(socket);
+  if(clients.length<2){
+      console.log('a user connected');
+      clients.push(socket);
 
 
 
@@ -117,6 +118,7 @@ io.on('connection', socket => {
     console.log('a user disconnected');
     clients.splice(clients.indexOf(socket), 1); // lo sacamos del array
   });
+  }
 });
 
 http.listen(PORT, () => {

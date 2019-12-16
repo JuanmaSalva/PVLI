@@ -13,8 +13,7 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   //es llamado cuando esta escne se carga
-  init(data) {
-    
+  init(data) {    
     this.playerData = data; //la informacion de las armas seleccionadas
     this.iconoArmaPrincipal = this.add.image(32, 608, data.principal).setScale(0.7).setDepth(10);;
     this.iconoArmaSecundaria = this.add.image(85, 618, data.secundaria).setScale(0.45).setDepth(10);;
@@ -65,7 +64,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.lifePlayer2 = _c.settPlayer2.vidaMax;
 
     this.lifeContainer = this.add.image(_c.settBarraVida.posicionContainer.x, _c.settBarraVida.posicionContainer.y, 'containerVida').setOrigin(0, 0).setDepth(10);
-    this.lifeContainer.displayWidth = _c.settBarraVida.widthContainer;
+    this.lifeContainer.displayWidth = +_c.settBarraVida.widthContainer;
     this.lifeBar = this.add.image(_c.settBarraVida.posicionBarra.x, _c.settBarraVida.posicionBarra.y, 'barraVida').setOrigin(0, 0).setDepth(9);
     this.lifeBar.displayWidth = _c.settBarraVida.widthContainer;
 

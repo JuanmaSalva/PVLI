@@ -8,7 +8,9 @@ export default class Player extends Phaser.GameObjects.Container { //es un conta
     this.body.setCollideWorldBounds(); //colisiona con los bordes de la partida
     this.body.setCircle(_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox, -_c.settPlayer.tamañoHitbox);
     this.body.immovable = true;
+
     this._maxSpeed = _c.settPlayer.velocidadMax;
+
     this.speed = this._maxSpeed;
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.scena = scene;
