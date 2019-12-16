@@ -28,11 +28,11 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('containerVida', 'assets/ContainerVida.png');
     this.load.image('blueTank', 'assets/blueTank.png');
     this.load.image('blueBarrel', 'assets/blueBarrel.png');
+    this.load.image('balaRebotadora', 'assets/balaRebotadora.png');
   } //cargar los recursos
 
   create() {
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
-
     this.pointer = this.input.activePointer; //cursor del raton
 
     this.shootContainer = this.add.image(_c.settBarraRech.posicionContainer.x, _c.settBarraRech.posicionContainer.y, 'containerVida').setOrigin(0, 0);
@@ -97,7 +97,7 @@ export default class Game extends Phaser.Scene { //es una escena
       this.poolBalasRafagas.push(this.add.sprite(-50, -50, 'bala1').setScale(1.5).setDepth(-1));
     }
     for (let i = 0; i < _c.settBRebot.cantidadPool; i++) {
-      this.poolBalasRebotador.push(this.add.sprite(-50, -50, 'bala1').setScale(1.5).setDepth(-1));
+      this.poolBalasRebotador.push(this.add.sprite(-50, -50, 'balaRebotadora').setScale(1.5).setDepth(-1));
     }
     for (let i = 0; i < _c.settBSimples.cantidadPool; i++) {
       this.poolBalasMortero.push(this.add.sprite(-50, -50, 'balaMortero').setScale(1.5).setDepth(0));

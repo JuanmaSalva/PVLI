@@ -34,6 +34,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('containerVida', 'assets/ContainerVida.png');
     this.load.image('blueTank', 'assets/blueTank.png');
     this.load.image('blueBarrel', 'assets/blueBarrel.png');
+    this.load.image('balaRebotadora', 'assets/balaRebotadora.png');
   } //cargar los recursos
 
   create() {
@@ -99,7 +100,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.poolBalasSimples = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBSimples.cantidadPool, 'disparosimple', _c.settBSimples.velocidad, _c.settBSimples.aceleracion, _c.settBSimples.rebotes, _c.settBSimples.cadencia, _c.settBSimples.daño, null, this.player2); //crea la pool de todos las balas simples
     this.poolBalasRafagas = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRaf.cantidadPool, 'rafagas', _c.settBRaf.velocidad, _c.settBRaf.aceleracion, _c.settBRaf.rebotes, _c.settBRaf.cadencia, _c.settBRaf.daño, null, this.player2);
     this.poolBalasMortero = new PoolBalas(this, null, this.player, 'balaMortero', _c.settBMortero.cantidadPool, 'mortero', _c.settBMortero.velocidad, _c.settBMortero.aceleracion, _c.settBMortero.rebotes, _c.settBMortero.cadencia, _c.settBMortero.daño, _c.settBMortero.rango);
-    this.poolBalasRebotador = new PoolBalas(this, paredes, this.player, 'bala1', _c.settBRebot.cantidadPool, 'rebotador', _c.settBRebot.velocidad, _c.settBRebot.aceleracion, _c.settBRebot.rebotes, _c.settBRebot.cadencia, _c.settBRebot.daño, null, this.player2);
+    this.poolBalasRebotador = new PoolBalas(this, paredes, this.player, 'balaRebotadora', _c.settBRebot.cantidadPool, 'rebotador', _c.settBRebot.velocidad, _c.settBRebot.aceleracion, _c.settBRebot.rebotes, _c.settBRebot.cadencia, _c.settBRebot.daño, null, this.player2);
     ////////////////////////////////////////scena,paredes,     player ,  sprite,unidades,disparo, velocidad,aceleracion,rebotes,cadencia,daño, rango
 
 
