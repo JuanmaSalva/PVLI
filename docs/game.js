@@ -13,7 +13,7 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   //es llamado cuando esta escne se carga
-  init(data) {    
+  init(data) {
     this.playerData = data; //la informacion de las armas seleccionadas
     this.iconoArmaPrincipal = this.add.image(32, 608, data.principal).setScale(0.7).setDepth(10);;
     this.iconoArmaSecundaria = this.add.image(85, 618, data.secundaria).setScale(0.45).setDepth(10);;
@@ -35,6 +35,12 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('blueTank', 'assets/blueTank.png');
     this.load.image('blueBarrel', 'assets/blueBarrel.png');
     this.load.image('balaRebotadora', 'assets/balaRebotadora.png');
+
+    this.load.audio('explosion', 'assets/Explosion.wav');
+    this.load.audio('disparo', 'assets/Disparo.wav');
+    this.load.audio('rebote', 'assets/Rebote.wav');
+    this.load.audio('fondo', 'assets/fondo.wav');
+    
   } //cargar los recursos
 
   create() {
@@ -113,8 +119,8 @@ export default class Game extends Phaser.Scene { //es una escena
       this.tank2.angle = datos.angulo;
     });
 
-    this.socket.on("disparoJ2", datos => {      
-    console.log("Llamate solo una vez hijo de putaaa");
+    this.socket.on("disparoJ2", datos => {
+      console.log("Llamate solo una vez hijo de putaaa");
       this.spawnBala(datos.x, datos.y, datos.arma, true, datos.destino);
     })
 
@@ -123,9 +129,16 @@ export default class Game extends Phaser.Scene { //es una escena
       this.lifePlayer2 = _c.settPlayer.vidaMax;
       this.lifePlayer1 = _c.settPlayer.vidaMax;
       this.socket.off('disparoJ2');
-      this.scene.start('victoria');      
+      this.fondoAudio.stop();
+      this.scene.start('victoria');
     })
 
+
+    this.explosionAudio = this.sound.add('explosion');
+    this.fondoAudio = this.sound.add('fondo')
+
+    this.fondoAudio.play();
+    this.fondoAudio.setLoop(true);
   }//inicializa todo
 
   update() {
@@ -191,6 +204,9 @@ export default class Game extends Phaser.Scene { //es una escena
   }
 
   explosion(x, y) {
+
+    this.explosionAudio.play();
+    this.enviarSondio("explosion");
     this.socket.emit('explosion', { //avisa al segundo jugador de que se ha producido una explosion
       x: x,
       y: y,
@@ -226,7 +242,8 @@ export default class Game extends Phaser.Scene { //es una escena
         this.lifePlayer2 = _c.settPlayer.vidaMax;
         this.lifePlayer1 = _c.settPlayer.vidaMax;
         this.socket.emit('finDeJuego', 0)
-        this.socket.off('disparoJ2');
+        this.socket.off('disparoJ2');        
+        this.fondoAudio.stop();
         this.scene.start('derrota');
       }
     }
@@ -244,5 +261,11 @@ export default class Game extends Phaser.Scene { //es una escena
   revive = function () { //se revive al juegador
     this.lifePlayer1 = _c.settPlayer.vidaMax;
     console.log('1up');
+  }
+
+  enviarSondio = function (sonido) {
+
+    console.log("sonido de: " + sonido + " enviado");
+    socket.emit('sondio', sonido);
   }
 }

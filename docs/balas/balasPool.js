@@ -40,9 +40,13 @@ export default class Pool extends Phaser.GameObjects.Container {
         this.scene.add.existing(this); //le dice a la scene Game que existe
 
         if(rango)scene.setRangeMortero(rango);
+        
+        this.disparoAudio = this.scena.sound.add('disparo');
     }
 
     spawn = function (x, y,destX,destY) {
+        this.scena.enviarSondio("disparo");
+        this.disparoAudio.play();
         let entity = this._group.getFirstDead();
         if (entity) { //la inicializa
             entity.x = x;
@@ -94,8 +98,7 @@ export default class Pool extends Phaser.GameObjects.Container {
     
                 if(isMortero) this._group.children[i].direccion = BulletMortero.prototype.direccion; //si no se pone esto la funcion de direccion deja de funcionar
                 else this._group.children[i].direccion = Bullet.prototype.direccion; //si no se pone esto la funcion de direccion deja de funcionar
-            }
-    
+            }    
             i++;
         }
     }    

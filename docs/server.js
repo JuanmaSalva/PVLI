@@ -113,6 +113,10 @@ io.on('connection', socket => {
     }
   })
 
+  socket.on('sonido', sonido => {
+    clients[1].emit('sondip', sonido);
+  })
+
 
   socket.on('disconnect', () => {
     console.log('a user disconnected');
