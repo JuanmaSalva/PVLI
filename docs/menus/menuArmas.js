@@ -18,6 +18,7 @@ export default class MenuArmas extends Phaser.Scene {
         this.load.image('rebotador', 'assets/iconoRebotador.png');
         this.load.image('mortero', 'assets/iconoMortero.png');
         this.load.image('iconoSeleccion', 'assets/iconoSeleccionado.png');
+        this.load.image('waiting', 'assets/botonwaiting.png');
 
         this.load.audio('click', 'assets/menuclick.wav');
     }
@@ -25,13 +26,15 @@ export default class MenuArmas extends Phaser.Scene {
 
     create() {
         this.fondo = this.add.image(448, 320, 'fondoArmas'); //fondo provisional
-        this.botonSimple = this.add.image(325, 292, 'disparoSimple').setInteractive();
-        this.botonRafagas = this.add.image(325, 464, 'rafagas').setInteractive();
-        this.botonRebotador = this.add.image(608, 292, 'rebotador').setInteractive();
-        this.botonMortero = this.add.image(608, 464, 'mortero').setInteractive();
-        this.boton = this.add.image(470, 580, 'botonStart').setInteractive().setScale(0.5);
+        this.botonSimple = this.add.image(298, 292, 'disparoSimple').setInteractive();
+        this.botonRafagas = this.add.image(298, 464, 'rafagas').setInteractive();
+        this.botonRebotador = this.add.image(598, 292, 'rebotador').setInteractive();
+        this.botonMortero = this.add.image(598, 464, 'mortero').setInteractive();
+        this.boton = this.add.image(448, 580, 'botonStart').setInteractive().setScale(0.5);
         this.seleccionPrincipal = this.add.image(-50, -50, 'iconoSeleccion');
         this.seleccionSecundaria = this.add.image(-50, -50, 'iconoSeleccion');
+
+        this.botonClicked = false;
 
         this.clickAudio = this.sound.add('click');
         this.botonSimple.on('pointerdown', () => {
@@ -65,7 +68,9 @@ export default class MenuArmas extends Phaser.Scene {
 
         this.boton.on('pointerdown', () => {
             this.clickAudio.play();
-            if (this.armaPrincipalSeleccionada != "" && this.armaSecundariaSeleccionada != "") {
+            
+            if (this.armaPrincipalSeleccionada != "" && this.armaSecundariaSeleccionada != "" && !this.botonClicked) {
+                this.add.image(448, 375, 'waiting');
                 this.socket.emit("empezar", this.numPlayer); //avisa al server de que hay un juegador esprando
 
                 this.socket.on('respuestaJugadoresEsperando', comienzo => {
@@ -75,6 +80,7 @@ export default class MenuArmas extends Phaser.Scene {
                     }
                     else console.log("Esperando a otro jugador para empezar la partida");
                 })
+                this.botonClicked = true;
             };
         })
     }
