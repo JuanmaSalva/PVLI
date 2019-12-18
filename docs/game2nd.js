@@ -29,9 +29,15 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('blueTank', 'assets/blueTank.png');
     this.load.image('blueBarrel', 'assets/blueBarrel.png');
     this.load.image('balaRebotadora', 'assets/balaRebotadora.png');
+
+    this.load.audio('disparo', 'assets/Disparo.wav');
+    this.load.audio('explosion', 'assets/Explosion.wav');
+    this.load.audio('rebote', 'assets/Rebote.wav');
+    this.load.audio('fondo', 'assets/Fondo.wav');
   } //cargar los recursos
 
   create() {
+
     this.input.setDefaultCursor('url(assets/icon.cur), pointer'); //cambio del cursor
     this.pointer = this.input.activePointer; //cursor del raton
 
@@ -74,7 +80,7 @@ export default class Game extends Phaser.Scene { //es una escena
     map.createStaticLayer("Walls", tileset, 0, 0).setDepth(-1).setScale(0.5);  //Capa de las paredes
     map.createStaticLayer("Deco", tileset, 0, 0).setDepth(0).setScale(0.5);
     map.createStaticLayer("Deco2", tileset, 0, 0).setDepth(1).setScale(0.5);
-    
+
     this.p1 = this.add.sprite(100, 100, 'tank').setDepth(-2);
     this.p1Canon = this.add.sprite(100, 100, 'redBarrel1').setOrigin(0.5, 0).setDepth(-1);;
 
@@ -125,11 +131,11 @@ export default class Game extends Phaser.Scene { //es una escena
       this.actualizarBalasRebotador(datos);
       this.actualizarBalasMortero(datos);
 
-      if (datos.lifePlayer2 <= 0) this.scene.start('derrota');
       this.lifeBar.displayWidth = datos.lifePlayer2 * _c.settBarraVida.escalaBarraA_Vida;
     })
 
     this.socket.on("explosion", datos => {
+      this.playAudio('explosion');
       this.activarExplosion(datos);
     })
 
@@ -148,9 +154,23 @@ export default class Game extends Phaser.Scene { //es una escena
     this.isRecharging = false;
 
     this.socket.on('finDeJuego', ganado => {
+      this.fondoAudio.stop();
       if (ganado) this.scene.start('victoria');
       else this.scene.start('derrota');
     })
+
+    this.socket.on('sonido',sonido =>{
+      this.playAudio(sonido);
+    })
+
+    //audio    
+    this.disparoAudio = this.sound.add('disparo');
+    this.explosionAudio = this.sound.add('explosion');
+    this.reboteAudio = this.sound.add('rebote');    
+    this.fondoAudio = this.sound.add('fondo')
+
+    this.fondoAudio.play();
+    this.fondoAudio.setLoop(true);
   }
 
   update() {
@@ -282,6 +302,7 @@ export default class Game extends Phaser.Scene { //es una escena
 
 
   shoot = function () {
+    this.playAudio('disparo');
     this.socket.emit('disparoP2', {
       x: this.p2Canon.x,
       y: this.p2Canon.y,
@@ -311,9 +332,7 @@ export default class Game extends Phaser.Scene { //es una escena
         this.time.delayedCall(_c.settBMortero.cadencia, this.toggleRecharging, [], this);
         this.triggerRechargeUI(_c.settBMortero.cadencia);
       }
-
     }
-
   }
 
 
@@ -327,6 +346,13 @@ export default class Game extends Phaser.Scene { //es una escena
     this.shootBar.displayWidth = 0;
     this.speedRechargeP2 = _c.settBarraRech.velocidadUIRecarga / time;
     this.shootBar.setTint(_c.settBarraRech.colorBarraCharged);
+  }
+
+  playAudio(audio) {
+    console.log("sonido de: " + audio + " enviado");
+    if (audio === 'disparo')this.disparoAudio.play();
+    else if (audio === 'rebote');
+    else if (audio == 'explosion')this.explosionAudio.play();
   }
 
 }

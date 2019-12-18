@@ -6,9 +6,9 @@ export default class BalaRebotadora extends Bullet {
         this.velocidad = vel; //pone la velocidad del padre
         this.rebotesAcumulados = 0;
         this.daño = damage;
+        this.reboteAudio = scene.sound.add('rebote');
 
         scene.physics.add.collider(paredes, this, function () {
-
             this.rebotesAcumulados++;
             if (this.rebotesAcumulados <= reb) {
                 let angle = (Phaser.Math.Angle.Between(this.x, this.y, this.x + this.body.velocity.x, this.y + this.body.velocity.y) - Math.PI / 2);
@@ -24,6 +24,8 @@ export default class BalaRebotadora extends Bullet {
 
                 this.body.setVelocityX(this.direccion[0] * this.velocidad); //se le da la velocidad a la bala
                 this.body.setVelocityY(this.direccion[1] * this.velocidad);
+                this.reboteAudio.play();
+                scene.enviarSondio("rebote");
             }
             else {
                 pool.delete(this, false); //destruirse
