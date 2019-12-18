@@ -5,6 +5,7 @@ const io = require('socket.io')(http);
 
 const PORT = 80;
 var clients = [];
+let playersMenu = 2;
 
 
 app.get('/', function (req, res) {
@@ -38,90 +39,96 @@ app.use('/menus', express.static('menus'));
 
 
 io.on('connection', socket => {
-  if(clients.length<2){
-      console.log('a user connected');
-      clients.push(socket);
+  if (clients.length < 2) {
+    console.log('a user connected');
+    clients.push(socket);
 
 
 
-  clients[0].on('numeroJugador', () => { //simepre existira
-    let n = { numero: 0 };
-    clients[0].emit('numeroJugador', n);
-  });
-
-
-  if (clients[1]) { //cuando se conecta el segundo jugador
-    clients[1].on('numeroJugador', () => {
-      let n = { numero: 1 };
-      clients[1].emit('numeroJugador', n);
+    clients[0].on('numeroJugador', () => { //simepre existira
+      let n = { numero: 0 };
+      clients[0].emit('numeroJugador', n);
     });
-  }
 
 
-  socket.on('numeroDeJugadores', numJugador => {
-      clients[numJugador].emit('numeroDeJugadores', clients.length);
-  })
+    if (clients[1]) { //cuando se conecta el segundo jugador
+      clients[1].on('numeroJugador', () => {
+        let n = { numero: 1 };
+        clients[1].emit('numeroJugador', n);
+      });
+    }
 
 
-  this.jugadoresEsperando = { jugador1: false, jugador2: false }
-  socket.on('empezar', numJugador => { //cuando se le da a empezar partida
-    if (clients.length == 2) {
-      if (numJugador == 0) this.jugadoresEsperando.jugador1 = true;
-      else this.jugadoresEsperando.jugador2 = true;
-
-      console.log(this.jugadoresEsperando);
-      if (!this.jugadoresEsperando.jugador1 || !this.jugadoresEsperando.jugador2) {
-        socket.emit("respuestaJugadoresEsperando", false); //solo tiene que avisar a uno de los dos
+    socket.on('numeroDeJugadores', () => {
+      if (clients.length == 2 && playersMenu == 2) {
+        clients[0].emit('numeroDeJugadores', clients.length);
+        clients[1].emit('numeroDeJugadores', clients.length);
       }
-      else {
-        clients[0].emit("respuestaJugadoresEsperando", true); //solo tiene que avisar a uno de los dos
-        clients[1].emit("respuestaJugadoresEsperando", true); //solo tiene que avisar a uno de los dos
-      } //avisa a los dos aun q de momento esto peta (creo)
-    }
-    else console.log("Falta un jugador por conectarse");
-  })
+    })
 
 
-  socket.on('update', data => { //actualiza al jugador 2
-    if (clients.length == 2) clients[1].emit('update', data); //se lo envia directo
-  })
-
-
-  socket.on('explosion', data => {
-    clients[1].emit('explosion', data);
-  })
-
-
-  socket.on('updateP2', data => {
-    clients[0].emit('updateP2', data);
-  });
-
-  socket.on('disparoP2', data => {
-    clients[0].emit('disparoJ2', data);
-  });
-
-
-  socket.on('finDeJuego', perdedor => {
     this.jugadoresEsperando = { jugador1: false, jugador2: false }
+    socket.on('empezar', numJugador => { //cuando se le da a empezar partida
+      if (clients.length == 2) {
+        if (numJugador == 0) this.jugadoresEsperando.jugador1 = true;
+        else this.jugadoresEsperando.jugador2 = true;
 
-    console.log('Perdedor: ' + perdedor);
+        console.log(this.jugadoresEsperando);
+        if (!this.jugadoresEsperando.jugador1 || !this.jugadoresEsperando.jugador2) {
+          socket.emit("respuestaJugadoresEsperando", false); //solo tiene que avisar a uno de los dos
+        }
+        else if (playersMenu == 2) {
+          clients[0].emit("respuestaJugadoresEsperando", true);
+          clients[1].emit("respuestaJugadoresEsperando", true);
+        } //avisa a los dos aun q de momento esto peta (creo)
+      }
+      else console.log("Falta un jugador por conectarse");
+    })
 
-    if(perdedor == 0) clients[1].emit('finDeJuego', true);
-    else {
-      clients[0].emit('finDeJuego');
-      clients[1].emit('finDeJuego', false);
-    }
-  })
 
-  socket.on('sonido', sonido => {
-    clients[1].emit('sondip', sonido);
-  })
+    socket.on('update', data => { //actualiza al jugador 2
+      if (clients.length == 2) clients[1].emit('update', data); //se lo envia directo
+    })
 
 
-  socket.on('disconnect', () => {
-    console.log('a user disconnected');
-    clients.splice(clients.indexOf(socket), 1); // lo sacamos del array
-  });
+    socket.on('explosion', data => {
+      clients[1].emit('explosion', data);
+    })
+
+
+    socket.on('updateP2', data => {
+      clients[0].emit('updateP2', data);
+    });
+
+    socket.on('disparoP2', data => {
+      clients[0].emit('disparoJ2', data);
+    });
+
+
+    socket.on('finDeJuego', perdedor => {
+      this.jugadoresEsperando = { jugador1: false, jugador2: false }
+
+      playersMenu = 0;
+      console.log(playersMenu);
+      if (perdedor == 0) clients[1].emit('finDeJuego', true);
+      else {
+        clients[0].emit('finDeJuego');
+        clients[1].emit('finDeJuego', false);
+      }
+    })
+
+    socket.on('sonido', sonido => {
+      clients[1].emit('sondip', sonido);
+    })
+
+    socket.on('jugadorAMenu', () => {
+      playersMenu = playersMenu + 1;
+    })
+
+    socket.on('disconnect', () => {
+      console.log('a user disconnected');
+      clients.splice(clients.indexOf(socket), 1); // lo sacamos del array
+    });
   }
 });
 

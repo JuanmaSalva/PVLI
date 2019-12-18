@@ -3,6 +3,10 @@ export default class Victoria extends Phaser.Scene {
         super({ key: 'victoria' });
     }
 
+    init(soc) {
+        this.socket = soc;
+    }
+
     preload() {
         this.load.image('botonInicio', 'assets/botonmenu.png');
         this.load.image('fondoVictoria', 'assets/victoria.png');
@@ -17,6 +21,7 @@ export default class Victoria extends Phaser.Scene {
 
         this.boton.on('pointerdown', () => { //se le ha dado a jugar
             this.clickAudio.play();
+            this.socket.emit('jugadorAMenu');
             this.scene.start('menu');
         });
     }

@@ -3,6 +3,10 @@ export default class Derrota extends Phaser.Scene {
         super({ key: 'derrota' });
     }
 
+    init(soc) {
+        this.socket = soc;
+    }
+
     preload() {
         this.load.image('botonInicio', 'assets/botonmenu.png');
         this.load.image('fondoDerrota', 'assets/derrota.png');
@@ -17,6 +21,7 @@ export default class Derrota extends Phaser.Scene {
 
         this.boton.on('pointerdown', () => { //se le ha dado a jugar
             this.clickAudio.play();
+            this.socket.emit('jugadorAMenu');
             this.scene.start('menu');
         });
     }

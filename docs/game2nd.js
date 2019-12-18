@@ -155,8 +155,8 @@ export default class Game extends Phaser.Scene { //es una escena
 
     this.socket.on('finDeJuego', ganado => {
       this.fondoAudio.stop();
-      if (ganado) this.scene.start('victoria');
-      else this.scene.start('derrota');
+      if (ganado) this.scene.start('victoria',this.socket);
+      else this.scene.start('derrota',this.socket);
     })
 
     this.socket.on('sonido',sonido =>{

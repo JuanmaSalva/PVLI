@@ -129,7 +129,7 @@ export default class Game extends Phaser.Scene { //es una escena
       this.lifePlayer1 = _c.settPlayer.vidaMax;
       this.socket.off('disparoJ2');
       this.fondoAudio.stop();
-      this.scene.start('victoria');
+      this.scene.start('victoria',this.socket);
     })
 
 
@@ -243,7 +243,7 @@ export default class Game extends Phaser.Scene { //es una escena
         this.socket.emit('finDeJuego', 0)
         this.socket.off('disparoJ2');        
         this.fondoAudio.stop();
-        this.scene.start('derrota');
+        this.scene.start('derrota',this.socket);
       }
     }
     else {
