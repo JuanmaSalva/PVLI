@@ -120,6 +120,7 @@ export default class Game extends Phaser.Scene { //es una escena
     });
 
     this.socket.on("disparoJ2", datos => {
+      console.log("Llamate solo una vez hijo de putaaa");
       this.spawnBala(datos.x, datos.y, datos.arma, true, datos.destino);
     })
 
@@ -264,7 +265,7 @@ export default class Game extends Phaser.Scene { //es una escena
 
   enviarSondio = function (sonido) {
 
-    console.log("___sonido de: " + sonido + " enviado");
+    console.log("sonido de: " + sonido + " enviado");
     socket.emit('sondio', sonido);
   }
 }

@@ -39,9 +39,6 @@ export default class Canon extends Phaser.GameObjects.Sprite { //es un gameobjec
     }
 
     setArma = function (arma) {
-        if (this.arma === 'mortero' && this.circulo)this.circulo.destroy(); //evitamos que el rango se quede al cambiar de arma
         this.arma = arma;
-        
     }
-
 }
