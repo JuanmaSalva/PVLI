@@ -26,8 +26,6 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('tank', 'assets/redTank.png');
     this.load.image('redBarrel1', 'assets/redBarrel.png');
     this.load.tilemapTiledJSON('tilemap', 'assets/jsonMapDef3.json');
-    this.load.tilemapTiledJSON('tilemap2', 'assets/jsonMapDef4.json');
-    this.load.tilemapTiledJSON('tilemap3', 'assets/jsonMapDef5.json');
     this.load.image('patronesTilemap', 'assets/tilesDibujitosV2.png');
     this.load.image('bala1', 'assets/bala1.png');
     this.load.image('balaMortero', 'assets/balaMortero.png')
@@ -42,7 +40,7 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.audio('disparo', 'assets/Disparo.wav');
     this.load.audio('rebote', 'assets/Rebote.wav');
     this.load.audio('fondo', 'assets/fondo.wav');
-
+    
   } //cargar los recursos
 
   create() {
@@ -90,30 +88,11 @@ export default class Game extends Phaser.Scene { //es una escena
     this.player.setArmas(this.playerData.principal, this.playerData.secundaria);
     this.player.canon = this.barrel;
 
-    this.mapaAleatorio = Math.floor(Math.random() * 3);
-
-    this.socket.emit('mapaAleatorio', this.mapaAleatorio);
-
-    let map;
-    if (this.mapaAleatorio == 0) {
-      map = this.make.tilemap({
-        key: 'tilemap',
-        tileWidth: 64,
-        tileHeight: 64
-      }); //se crea el tilemap
-    } else if (this.mapaAleatorio == 1) {      
-      map = this.make.tilemap({
-        key: 'tilemap2',
-        tileWidth: 64,
-        tileHeight: 64
-      }); //se crea el tilemap
-    } else {
-      map = this.make.tilemap({
-        key: 'tilemap3',
-        tileWidth: 64,
-        tileHeight: 64
-      }); //se crea el tilemap
-    }
+    let map = this.make.tilemap({
+      key: 'tilemap',
+      tileWidth: 64,
+      tileHeight: 64
+    }); //se crea el tilemap
 
     let tileset = map.addTilesetImage('tilesDibujitosV2', 'patronesTilemap'); //se crea el tileset desde el tilesheet
     map.createStaticLayer("Background", tileset, 0, 0).setDepth(-2).setScale(0.5); //se crea el fondo desde el tileset
@@ -262,7 +241,7 @@ export default class Game extends Phaser.Scene { //es una escena
         this.lifePlayer2 = _c.settPlayer.vidaMax;
         this.lifePlayer1 = _c.settPlayer.vidaMax;
         this.socket.emit('finDeJuego', 0)
-        this.socket.off('disparoJ2');
+        this.socket.off('disparoJ2');        
         this.fondoAudio.stop();
         this.scene.start('derrota');
       }

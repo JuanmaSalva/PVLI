@@ -20,8 +20,6 @@ export default class Game extends Phaser.Scene { //es una escena
     this.load.image('tank', 'assets/redTank.png');
     this.load.image('redBarrel1', 'assets/redBarrel.png');
     this.load.tilemapTiledJSON('tilemap', 'assets/jsonMapDef3.json');
-    this.load.tilemapTiledJSON('tilemap2', 'assets/jsonMapDef4.json');
-    this.load.tilemapTiledJSON('tilemap3', 'assets/jsonMapDef5.json');
     this.load.image('patronesTilemap', 'assets/tilesDibujitosV2.png');
     this.load.image('bala1', 'assets/bala1.png');
     this.load.image('balaMortero', 'assets/balaMortero.png')
@@ -71,6 +69,17 @@ export default class Game extends Phaser.Scene { //es una escena
       if (this.arma === 'mortero' && pointer.leftButtonReleased()) this.disparar();
     })
 
+    let map = this.make.tilemap({
+      key: 'tilemap',
+      tileWidth: 64,
+      tileHeight: 64
+    }); //se crea el tilemap
+
+    let tileset = map.addTilesetImage('tilesDibujitosV2', 'patronesTilemap'); //se crea el tileset desde el tilesheet
+    map.createStaticLayer("Background", tileset, 0, 0).setDepth(-2).setScale(0.5); //se crea el fondo desde el tileset
+    map.createStaticLayer("Walls", tileset, 0, 0).setDepth(-1).setScale(0.5);  //Capa de las paredes
+    map.createStaticLayer("Deco", tileset, 0, 0).setDepth(0).setScale(0.5);
+    map.createStaticLayer("Deco2", tileset, 0, 0).setDepth(1).setScale(0.5);
 
     this.p1 = this.add.sprite(100, 100, 'tank').setDepth(-2);
     this.p1Canon = this.add.sprite(100, 100, 'redBarrel1').setOrigin(0.5, 0).setDepth(-1);;
@@ -150,50 +159,14 @@ export default class Game extends Phaser.Scene { //es una escena
       else this.scene.start('derrota');
     })
 
-    this.socket.on('sonido', sonido => {
+    this.socket.on('sonido',sonido =>{
       this.playAudio(sonido);
     })
-
-    let map;
-
-    this.socket.on('numeroMapa', numero => {
-      if (numero == 0) {
-        map = this.make.tilemap({
-          key: 'tilemap',
-          tileWidth: 64,
-          tileHeight: 64
-        }); //se crea el tilemap
-      }else if (numero == 1) {      
-        map = this.make.tilemap({
-          key: 'tilemap2',
-          tileWidth: 64,
-          tileHeight: 64
-        }); //se crea el tilemap
-      } else {
-        map = this.make.tilemap({
-          key: 'tilemap3',
-          tileWidth: 64,
-          tileHeight: 64
-        });
-    };
-
-    let tileset = map.addTilesetImage('tilesDibujitosV2', 'patronesTilemap'); //se crea el tileset desde el tilesheet
-    map.createStaticLayer("Background", tileset, 0, 0).setDepth(-3).setScale(0.5); //se crea el fondo desde el tileset
-    map.createStaticLayer("Walls", tileset, 0, 0).setDepth(-2).setScale(0.5);  //Capa de las paredes
-    map.createStaticLayer("Deco", tileset, 0, 0).setDepth(-1).setScale(0.5);
-    map.createStaticLayer("Deco2", tileset, 0, 0).setDepth(0).setScale(0.5);
-
-
-  });
-
-
-
-
 
     //audio    
     this.disparoAudio = this.sound.add('disparo');
     this.explosionAudio = this.sound.add('explosion');
-    this.reboteAudio = this.sound.add('rebote');
+    this.reboteAudio = this.sound.add('rebote');    
     this.fondoAudio = this.sound.add('fondo')
 
     this.fondoAudio.play();
@@ -377,9 +350,9 @@ export default class Game extends Phaser.Scene { //es una escena
 
   playAudio(audio) {
     console.log("sonido de: " + audio + " enviado");
-    if (audio === 'disparo') this.disparoAudio.play();
+    if (audio === 'disparo')this.disparoAudio.play();
     else if (audio === 'rebote');
-    else if (audio == 'explosion') this.explosionAudio.play();
+    else if (audio == 'explosion')this.explosionAudio.play();
   }
 
 }
