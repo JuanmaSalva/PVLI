@@ -18,6 +18,7 @@ export default class MenuArmas extends Phaser.Scene {
         this.load.image('rebotador', 'assets/iconoRebotador.png');
         this.load.image('mortero', 'assets/iconoMortero.png');
         this.load.image('iconoSeleccion', 'assets/iconoSeleccionado.png');
+        this.load.image('waiting', 'assets/botonwaiting.png');
 
         this.load.audio('click', 'assets/menuclick.wav');
     }
@@ -25,13 +26,14 @@ export default class MenuArmas extends Phaser.Scene {
 
     create() {
         this.fondo = this.add.image(448, 320, 'fondoArmas'); //fondo provisional
-        this.botonSimple = this.add.image(325, 292, 'disparoSimple').setInteractive();
-        this.botonRafagas = this.add.image(325, 464, 'rafagas').setInteractive();
-        this.botonRebotador = this.add.image(608, 292, 'rebotador').setInteractive();
-        this.botonMortero = this.add.image(608, 464, 'mortero').setInteractive();
-        this.boton = this.add.image(470, 580, 'botonStart').setInteractive().setScale(0.5);
+        this.botonSimple = this.add.image(298, 292, 'disparoSimple').setInteractive();
+        this.botonRafagas = this.add.image(298, 464, 'rafagas').setInteractive();
+        this.botonRebotador = this.add.image(598, 292, 'rebotador').setInteractive();
+        this.botonMortero = this.add.image(598, 464, 'mortero').setInteractive();
+        this.boton = this.add.image(448, 580, 'botonStart').setInteractive().setScale(0.5);
         this.seleccionPrincipal = this.add.image(-50, -50, 'iconoSeleccion');
         this.seleccionSecundaria = this.add.image(-50, -50, 'iconoSeleccion');
+        this.waiting = false;
 
         this.clickAudio = this.sound.add('click');
         this.botonSimple.on('pointerdown', () => {
@@ -62,19 +64,21 @@ export default class MenuArmas extends Phaser.Scene {
             this.seleccionSecundaria.y = this.botonMortero.y;
         })
 
+        this.socket.on('respuestaJugadoresEsperando', comienzo => {
+            if (comienzo) {
+                this.waiting = false;
+                if (this.numPlayer == 0) this.scene.start('main', { principal: this.armaPrincipalSeleccionada, secundaria: this.armaSecundariaSeleccionada, soc: this.socket, numPlayer: this.numPlayer });
+                else this.scene.start('game2nd', { principal: this.armaPrincipalSeleccionada, secundaria: this.armaSecundariaSeleccionada, soc: this.socket, numPlayer: this.numPlayer });
+            }
+            else console.log("Esperando a otro jugador para empezar la partida");
+        })
 
         this.boton.on('pointerdown', () => {
             this.clickAudio.play();
-            if (this.armaPrincipalSeleccionada != "" && this.armaSecundariaSeleccionada != "") {
+            if (this.armaPrincipalSeleccionada != "" && this.armaSecundariaSeleccionada != "" && !this.waiting) {
+                this.waiting = true;
+                this.add.image(448,375, 'waiting');
                 this.socket.emit("empezar", this.numPlayer); //avisa al server de que hay un juegador esprando
-
-                this.socket.on('respuestaJugadoresEsperando', comienzo => {
-                    if (comienzo) {
-                        if (this.numPlayer == 0) this.scene.start('main', { principal: this.armaPrincipalSeleccionada, secundaria: this.armaSecundariaSeleccionada, soc: this.socket, numPlayer: this.numPlayer });
-                        else this.scene.start('game2nd', { principal: this.armaPrincipalSeleccionada, secundaria: this.armaSecundariaSeleccionada, soc: this.socket, numPlayer: this.numPlayer });
-                    }
-                    else console.log("Esperando a otro jugador para empezar la partida");
-                })
             };
         })
     }

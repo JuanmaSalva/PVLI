@@ -58,8 +58,11 @@ io.on('connection', socket => {
   }
 
 
-  socket.on('numeroDeJugadores', numJugador => {
-      clients[numJugador].emit('numeroDeJugadores', clients.length);
+  socket.on('numeroDeJugadores', () => {
+      if(clients.length == 2){
+        clients[0].emit('numeroDeJugadores', clients.length);
+        clients[1].emit('numeroDeJugadores', clients.length);
+      }
   })
 
 
